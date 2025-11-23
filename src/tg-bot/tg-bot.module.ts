@@ -3,6 +3,7 @@ import { TgBotService } from './tg-bot.service';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { ConfigService } from '@nestjs/config';
 import { UserModule } from 'src/user/user.module';
+import { TgBotLocalizationService } from './tg-bot-localization.service';
 
 @Module({
   imports: [
@@ -18,6 +19,6 @@ import { UserModule } from 'src/user/user.module';
       },
     }),
   ],
-  providers: [TgBotService],
+  providers: [TgBotService, TgBotLocalizationService],
 })
-export class TgBotModule { }
+export class TgBotModule {}

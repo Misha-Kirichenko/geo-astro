@@ -7,19 +7,19 @@ export type UserDocument = HydratedDocument<User>;
 @Schema({ versionKey: false, timestamps: true })
 export class User {
   @Prop({ required: true, unique: true, type: MongooseSchema.Types.Number })
-  tgId!: number;
+  tgId: number;
 
   @Prop({ type: MongooseSchema.Types.String })
-  firstName!: string;
+  firstName: string;
 
   @Prop({ type: MongooseSchema.Types.String, required: false })
   lastName?: string;
 
   @Prop({ required: true, unique: true })
-  userName!: string;
+  userName: string;
 
   @Prop({ required: true, enum: Object.values(LangEnum) })
-  lang!: LangEnum;
+  lang: LangEnum;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

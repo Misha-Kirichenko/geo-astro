@@ -1,23 +1,5 @@
 import { LangEnum } from 'src/common/enums';
-import { FlagsEnum } from 'src/common/enums/flags.enum';
 import { LangEventEnum } from '../enums/lang-events.enum';
-
-export const LANG_SELECT = [
-  [
-    {
-      text: FlagsEnum.GE,
-      callback_data: `${LangEventEnum.lang_select}:${LangEnum.GE}`,
-    },
-    {
-      text: FlagsEnum.RU,
-      callback_data: `${LangEventEnum.lang_select}:${LangEnum.RU}`,
-    },
-    {
-      text: FlagsEnum.EN,
-      callback_data: `${LangEventEnum.lang_select}:${LangEnum.EN}`,
-    },
-  ],
-];
 
 export const CHANGE_LANG_MESSAGE = {
   en: `Select your preferred language:`,
@@ -46,7 +28,7 @@ export const EXISTING_USER_ACTIONS = {
     [
       {
         text: 'Change language',
-        callback_data: LangEventEnum.lang_change,
+        callback_data: LangEventEnum.lang_menu,
       },
       {
         text: 'View subscription',
@@ -68,7 +50,7 @@ export const EXISTING_USER_ACTIONS = {
     [
       {
         text: 'ენის შეცვლა',
-        callback_data: LangEventEnum.lang_change,
+        callback_data: LangEventEnum.lang_menu,
       },
       {
         text: 'გამოწერების ნახვა',
@@ -90,7 +72,7 @@ export const EXISTING_USER_ACTIONS = {
     [
       {
         text: 'Сменить язык',
-        callback_data: LangEventEnum.lang_change,
+        callback_data: LangEventEnum.lang_menu,
       },
       {
         text: 'Смотреть подписку',
@@ -108,4 +90,10 @@ export const EXISTING_USER_ACTIONS = {
       },
     ],
   ],
+};
+
+export const LANG_CHANGE_SUCCESS_MESSAGE = {
+  en: `Language changed successfully! 🎉`,
+  ru: `Язык успешно изменен! 🎉`,
+  ge: 'ენა წარმატებით შეიცვალა! 🎉',
 };
