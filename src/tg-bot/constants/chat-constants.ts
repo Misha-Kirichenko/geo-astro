@@ -1,5 +1,6 @@
 import { LangEnum } from 'src/common/enums';
 import { LangEventEnum } from '../enums/lang-events.enum';
+import { ServicesEventEnum } from '../enums';
 
 export const CHANGE_LANG_MESSAGE = {
   en: `Select your preferred language:`,
@@ -42,7 +43,7 @@ export const EXISTING_USER_ACTIONS = {
       },
       {
         text: 'Services',
-        callback_data: `services:view`,
+        callback_data: ServicesEventEnum.service_menu,
       },
     ],
   ],
@@ -64,7 +65,7 @@ export const EXISTING_USER_ACTIONS = {
       },
       {
         text: 'მომსახურეობები',
-        callback_data: `services:view`,
+        callback_data: ServicesEventEnum.service_menu,
       },
     ],
   ],
@@ -86,7 +87,7 @@ export const EXISTING_USER_ACTIONS = {
       },
       {
         text: 'Услуги',
-        callback_data: `services:view`,
+        callback_data: ServicesEventEnum.service_menu,
       },
     ],
   ],
@@ -96,4 +97,16 @@ export const LANG_CHANGE_SUCCESS_MESSAGE = {
   en: `Language changed successfully! 🎉`,
   ru: `Язык успешно изменен! 🎉`,
   ge: 'ენა წარმატებით შეიცვალა! 🎉',
+};
+
+export const NON_SUPPORTED_LANG_MESSAGE = {
+  en: `Sorry, your language is not supported yet... Please select a different language.`,
+  ru: `Извините, ваш язык пока не поддерживается... Пожалуйста, выберите другой язык.`,
+  ge: 'თქვენი ენის მხარდაჭერა ჯერ-ჯერობით არ გვაქვს... გთხოვთ, აირჩიოთ სხვა ენა.',
+};
+
+export const SERVICE_LIST_HEADING = {
+  en: `🛎️ Services Menu`,
+  ru: `🛎️ Меню услуг`,
+  ge: '🛎️ მომსახურების მენიუ',
 };

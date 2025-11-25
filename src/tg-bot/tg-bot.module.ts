@@ -4,6 +4,7 @@ import { TelegrafModule } from 'nestjs-telegraf';
 import { ConfigService } from '@nestjs/config';
 import { UserModule } from 'src/user/user.module';
 import { TgBotLocalizationService } from './tg-bot-localization.service';
+import { session } from 'telegraf';
 
 @Module({
   imports: [
@@ -15,10 +16,10 @@ import { TgBotLocalizationService } from './tg-bot-localization.service';
         if (!token) {
           throw new Error('TG_BOT_TOKEN is not defined in .env');
         }
-        return { token };
+        return { token, middlewares: [session()] };
       },
     }),
   ],
   providers: [TgBotService, TgBotLocalizationService],
 })
-export class TgBotModule {}
+export class TgBotModule { }
