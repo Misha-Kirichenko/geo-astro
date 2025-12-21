@@ -1,26 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
 import { TgBotModule } from './tg-bot/tg-bot.module';
-import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { DatabaseModule } from './database/database.module';
+import { PromocodeModule } from './promocode/promocode.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
-    }),
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        return {
-          uri: configService.get('MONGO_URL'),
-        };
-      },
-    }),
-    UserModule,
-    TgBotModule,
-  ],
+  imports: [TgBotModule, AuthModule, DatabaseModule, PromocodeModule],
 })
-export class AppModule { }
+export class AppModule {}

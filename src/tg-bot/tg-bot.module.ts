@@ -1,14 +1,42 @@
 import { Module } from '@nestjs/common';
-import { TgBotService } from './tg-bot.service';
+import { TgBotMenuHandler, TgBotServicesHandler } from './handlers';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { ConfigService } from '@nestjs/config';
-import { UserModule } from 'src/user/user.module';
-import { TgBotLocalizationService } from './tg-bot-localization.service';
+import {
+  TgBotLocalizationService,
+  TgBotPromocodeService,
+  TgBotUserService,
+  TgBotPromocodeCacheService,
+  TgBotServiceFormService,
+} from './services';
 import { session } from 'telegraf';
+import { MongooseModule } from '@nestjs/mongoose';
+import {
+  TgBotUser,
+  TgBotUserSchema,
+} from 'src/common/schemas/tg-bot-user.schema';
+import { connections } from 'src/common/constants';
+import { DatabaseModule } from 'src/database/database.module';
+import {
+  Promocode,
+  PromocodeSchema,
+} from 'src/common/schemas/promocode.schema';
+import {
+  PromocodeUsage,
+  PromocodeUsageSchema,
+} from 'src/common/schemas/promocode-usage.schema';
 
 @Module({
   imports: [
-    UserModule,
+    DatabaseModule,
+    MongooseModule.forFeature(
+      [
+        { name: TgBotUser.name, schema: TgBotUserSchema },
+        { name: Promocode.name, schema: PromocodeSchema },
+        { name: PromocodeUsage.name, schema: PromocodeUsageSchema },
+      ],
+      connections.DB_MASTER.alias,
+    ),
     TelegrafModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
@@ -20,6 +48,15 @@ import { session } from 'telegraf';
       },
     }),
   ],
-  providers: [TgBotService, TgBotLocalizationService],
+  providers: [
+    TgBotMenuHandler,
+    TgBotLocalizationService,
+    TgBotUserService,
+    TgBotPromocodeService,
+    TgBotPromocodeCacheService,
+    TgBotServicesHandler,
+    TgBotServiceFormService,
+  ],
+  exports: [MongooseModule],
 })
 export class TgBotModule { }

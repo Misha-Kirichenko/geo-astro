@@ -1,5 +1,5 @@
 import { LangEnum } from 'src/common/enums';
-import { FlagsEnum } from 'src/common/enums/flags.enum';
+import { FlagsEnum } from 'src/common/enums';
 import { LangEventEnum } from 'src/tg-bot/enums/lang-events.enum';
 
 export const getLangKeyboard = (

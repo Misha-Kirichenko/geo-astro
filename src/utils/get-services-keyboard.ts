@@ -1,26 +1,16 @@
-import { IServiceKeyboard } from 'src/tg-bot/interface';
-import { SERVICE_NAMES } from '../common/constants/service-names.constants';
+import { IServiceKeyboard } from 'src/tg-bot/interfaces';
+import { SERVICES } from '../common/constants/services.constants';
 import { LangEnum } from 'src/common/enums';
-
-// export const getServicesKeyboard = (lang: LangEnum) => {
-//   const serviceList = SERVICE_NAMES[lang];
-//   console.log('list', serviceList);
-//   return serviceList.map((service) => [
-//     {
-//       text: service.name,
-//       callback_data: `sd:aa`,
-//     },
-//   ]);
-// };
+import { ServicesEventEnum } from 'src/tg-bot/enums';
 
 export const getServicesKeyboard = (lang: LangEnum) => {
-  const serviceList = SERVICE_NAMES[lang as keyof typeof SERVICE_NAMES];
+  const serviceList = SERVICES[lang];
   const serviceKeyboardButtons: IServiceKeyboard[][] = [];
   let row: IServiceKeyboard[] = [];
   for (let i = 0; i < serviceList.length; i++) {
     const serviceObj = {
       text: serviceList[i].name,
-      callback_data: `service:${i}`,
+      callback_data: `${ServicesEventEnum.service_select}:${lang}:${serviceList[i].slug}`,
     };
     row.push(serviceObj);
 

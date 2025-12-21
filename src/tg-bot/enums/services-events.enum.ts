@@ -1,5 +1,6 @@
 export enum ServicesEventEnum {
   service_menu = 'service:menu',
   service_select = 'service:select',
-  service_change = 'service:change',
+  service_form = 'service:form',
+  service_form_fill = 'service:form_fill',
 }
