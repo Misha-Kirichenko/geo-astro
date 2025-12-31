@@ -20,33 +20,29 @@ import { RegExpContext } from 'src/common/interfaces';
 export class TgBotLocalizationService {
   constructor(private readonly tgBotUserService: TgBotUserService) { }
 
-  private determineAndSetLang(ctx: RegExpContext): LangEnum {
-    const lang = ctx.match[1] as LangEnum;
-    if (!lang) throw new Error('No language was set');
-    ctx.session.lang = lang;
-    return lang;
-  }
-
   public async handleFirstGreeting(ctx: Context): Promise<void> {
-    let selectedLang = LangEnum.EN;
+    const selectedLang = (ctx.session.lang ||
+      ctx.from?.language_code ||
+      LangEnum.EN) as LangEnum;
+
     const langList = Object.values(LangEnum);
-    const userLang = ctx.from?.language_code;
-    if (userLang && langList.includes(userLang as LangEnum)) {
-      selectedLang = userLang as LangEnum;
+    if (selectedLang && langList.includes(selectedLang)) {
+      const greetingMessage =
+        GREETING_MESSAGE[selectedLang as keyof typeof GREETING_MESSAGE];
+
+      const langSelectKeyboard = getLangKeyboard('lang_select');
+
+      await ctx.reply(greetingMessage, {
+        reply_markup: {
+          inline_keyboard: langSelectKeyboard,
+        },
+      });
     }
-    const greetingMessage =
-      GREETING_MESSAGE[selectedLang as keyof typeof GREETING_MESSAGE];
-
-    const langSelectKeyboard = getLangKeyboard('lang_select');
-
-    await ctx.reply(greetingMessage, {
-      reply_markup: {
-        inline_keyboard: langSelectKeyboard,
-      },
-    });
+    return;
   }
 
-  private async saveUserWithLang(ctx: Context, lang: LangEnum): Promise<void> {
+  private async saveUserWithLang(ctx: RegExpContext): Promise<void> {
+    const chosenLang = ctx.match[1];
     if (!ctx.callbackQuery?.from) throw new Error('No ctx.from in callback');
     const { id, first_name, last_name, username } =
       ctx.callbackQuery.from || {};
@@ -55,31 +51,26 @@ export class TgBotLocalizationService {
       firstName: first_name,
       ...(last_name ? { lastName: last_name } : {}),
       ...(username ? { userName: username } : {}),
-      lang,
+      lang: chosenLang,
     };
 
-    await this.tgBotUserService.saveUser(
-      userObj,
-      ctx.callbackQuery.from.language_code as LangEnum,
-    );
+    await this.tgBotUserService.saveUser(userObj);
+    ctx.session.lang = chosenLang as LangEnum;
   }
 
   public async langSelect(
     ctx: RegExpContext,
     showMainMenuCallback: TShowMainMenuCallback,
   ): Promise<void> {
-    const lang = this.determineAndSetLang(ctx);
-    await this.saveUserWithLang(ctx, lang);
+    await this.saveUserWithLang(ctx);
     await ctx.answerCbQuery();
-    await showMainMenuCallback(ctx, lang);
+    await showMainMenuCallback(ctx);
   }
 
   public async getLangMenu(ctx: RegExpContext): Promise<void> {
-    const lang = this.determineAndSetLang(ctx);
     const headingMessage =
-      CHANGE_LANG_MESSAGE[lang as keyof typeof CHANGE_LANG_MESSAGE];
+      CHANGE_LANG_MESSAGE[ctx.session.lang as keyof typeof CHANGE_LANG_MESSAGE];
 
-    await ctx.answerCbQuery();
     const langChangeKeyboard = getLangKeyboard('lang_change');
 
     await ctx.reply(headingMessage, {
@@ -89,29 +80,31 @@ export class TgBotLocalizationService {
           [
             {
               text: '⬅️',
-              callback_data: `${NavigationEventsEnum.main_menu}:${lang}`,
+              callback_data: NavigationEventsEnum.main_menu,
             },
           ],
         ],
       },
     });
+    await ctx.answerCbQuery();
   }
 
   public async langChange(
     ctx: RegExpContext,
     showMainMenuCallback: TShowMainMenuCallback,
   ): Promise<void> {
-    const lang = this.determineAndSetLang(ctx);
-    await this.saveUserWithLang(ctx, lang);
-    const successMessage = LANG_CHANGE_SUCCESS_MESSAGE[lang];
+    await this.saveUserWithLang(ctx);
+    const successMessage =
+      LANG_CHANGE_SUCCESS_MESSAGE[ctx.session.lang as LangEnum];
     await ctx.reply(successMessage);
-    await showMainMenuCallback(ctx, lang);
+    await showMainMenuCallback(ctx);
     await ctx.answerCbQuery();
   }
 
   public async showServicesMenu(ctx: RegExpContext): Promise<void> {
-    const lang = this.determineAndSetLang(ctx);
-    const servicesKeyboardItems = getServicesKeyboard(lang);
+    const servicesKeyboardItems = getServicesKeyboard(
+      ctx.session.lang as LangEnum,
+    );
     const servicesKeyboard = {
       reply_markup: {
         inline_keyboard: [
@@ -119,7 +112,7 @@ export class TgBotLocalizationService {
           [
             {
               text: '⬅️',
-              callback_data: `${NavigationEventsEnum.main_menu}:${lang}`,
+              callback_data: NavigationEventsEnum.main_menu,
             },
           ],
         ],
@@ -127,18 +120,19 @@ export class TgBotLocalizationService {
     };
 
     const serviceMenuHeading =
-      SERVICE_LIST_HEADING[lang as keyof typeof SERVICE_LIST_HEADING];
+      SERVICE_LIST_HEADING[
+      ctx.session.lang as keyof typeof SERVICE_LIST_HEADING
+      ];
     await ctx.reply(serviceMenuHeading, servicesKeyboard);
     await ctx.answerCbQuery();
   }
 
   public async getService(ctx: RegExpContext): Promise<void> {
-    const lang = this.determineAndSetLang(ctx);
-    const serviceSlug = ctx.match[2];
-    if (!lang) throw new Error();
+    const serviceSlug = ctx.match[1];
+    if (!ctx.session.lang) throw new Error();
     if (!serviceSlug) throw new Error('Invalid service slug');
 
-    const service = SERVICES[lang].find(
+    const service = SERVICES[ctx.session.lang].find(
       (service) => service.slug === (serviceSlug as ServiceEnum),
     );
 
@@ -154,12 +148,12 @@ export class TgBotLocalizationService {
           inline_keyboard: [
             [
               {
-                text: `${BUY[lang]}: ${service?.price}ლ`,
-                callback_data: `${ServicesEventEnum.service_form}:${lang}:${service.slug}:0`,
+                text: `${BUY[ctx.session.lang]}: ${service?.price}ლ`,
+                callback_data: `${ServicesEventEnum.service_form}:${service.slug}:0`,
               },
               {
                 text: '⬅️',
-                callback_data: `${ServicesEventEnum.service_menu}:${lang}`,
+                callback_data: ServicesEventEnum.service_menu,
               },
             ],
           ],

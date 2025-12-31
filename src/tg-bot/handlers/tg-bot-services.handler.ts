@@ -17,7 +17,7 @@ export class TgBotServicesHandler {
     try {
       await this.tgBotPromocodeService.tryGetPriceWithPromo(ctx);
     } catch (e) {
-      console.error('promo error:', e);
+      console.error('promocode input error:', e);
     }
   }
 
@@ -32,12 +32,15 @@ export class TgBotServicesHandler {
     }
   }
 
-  @Hears(/.*/)
+  @Hears(EVENT_REGEX.form_data_input)
   async onFormFill(@Ctx() ctx: RegExpContext): Promise<void> {
     try {
-      await this.tgBotServiceFormService.runStage(ctx);
+      if (ctx.session['step'] === ServicesEventEnum.service_form) {
+        await this.tgBotServiceFormService.runStage(ctx);
+      }
+      return;
     } catch (e) {
-      console.error('promo error:', e);
+      console.error('form data input error:', e);
     }
   }
 }

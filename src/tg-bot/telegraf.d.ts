@@ -1,11 +1,7 @@
 import { LangEnum, ServiceEnum } from 'src/common/enums';
 import 'telegraf';
-import {
-  LangEventEnum,
-  NavigationEventsEnum,
-  PromocodeEventEnum,
-  ServicesEventEnum,
-} from './enums';
+
+import { TMenuStep } from './types';
 
 type TServiceFormData = Partial<Record<ServiceFormFieldsEnum, string>>;
 
@@ -13,11 +9,7 @@ declare module 'telegraf' {
   interface Context {
     session: {
       lang?: LangEnum;
-      step?:
-        | ServicesEventEnum
-        | NavigationEventsEnum
-        | PromocodeEventEnum
-        | LangEventEnum;
+      step?: TMenuStep;
       serviceItem?: {
         promocode?: string;
         stage?: number;

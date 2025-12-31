@@ -15,7 +15,7 @@ export function IsDateOnly(validationOptions?: ValidationOptions) {
       validator: {
         validate(value: any, args?: ValidationArguments) {
           if (typeof value !== 'string') return false;
-          if (!REGEXES.IS_DATE_STRING.test(value)) return false;
+          if (!REGEXES.GLOBAL_REGEXES.IS_DATE_STRING.test(value)) return false;
 
           const date = new Date(value);
           return (

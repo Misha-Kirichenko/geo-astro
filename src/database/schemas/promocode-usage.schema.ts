@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
-import { ServiceEnum } from '../enums';
+import { ServiceEnum } from '../../common/enums';
 
 export type PromocodeUsageDocument = HydratedDocument<PromocodeUsage>;
 

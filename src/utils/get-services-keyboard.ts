@@ -10,7 +10,7 @@ export const getServicesKeyboard = (lang: LangEnum) => {
   for (let i = 0; i < serviceList.length; i++) {
     const serviceObj = {
       text: serviceList[i].name,
-      callback_data: `${ServicesEventEnum.service_select}:${lang}:${serviceList[i].slug}`,
+      callback_data: `${ServicesEventEnum.service_select}:${serviceList[i].slug}`,
     };
     row.push(serviceObj);
 

@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { connections } from 'src/common/constants';
-import { User, UserDocument } from 'src/common/schemas/user.schema';
+import { User, UserDocument } from 'src/database/schemas/user.schema';
 import { UserRoleEnum } from 'src/common/enums';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class DatabaseService {
   constructor(
     @InjectModel(User.name, connections.DB_MASTER.alias)
     private readonly userModel: Model<UserDocument>,
-  ) {}
+  ) { }
 
   public async createRootUser() {
     const rootLogin = 'root';

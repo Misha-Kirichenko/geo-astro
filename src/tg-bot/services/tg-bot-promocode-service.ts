@@ -4,16 +4,16 @@ import { Model } from 'mongoose';
 import {
   TgBotUser,
   TgBotUserDocument,
-} from 'src/common/schemas/tg-bot-user.schema';
+} from 'src/database/schemas/tg-bot-user.schema';
 import { connections, SERVICES } from 'src/common/constants';
 import {
   PromocodeUsage,
   PromocodeUsageDocument,
-} from 'src/common/schemas/promocode-usage.schema';
+} from 'src/database/schemas/promocode-usage.schema';
 import {
   Promocode,
   PromocodeDocument,
-} from 'src/common/schemas/promocode.schema';
+} from 'src/database/schemas/promocode.schema';
 import { LangEnum } from 'src/common/enums';
 import { clientMessagesUtil } from 'src/utils';
 import {
@@ -96,13 +96,13 @@ export class TgBotPromocodeService {
                 [
                   {
                     text: `${BUY[chosenLang]}: ❌ ${service.price}ლ / ✅ ${priceWithPromo}ლ `,
-                    callback_data: `${ServicesEventEnum.service_form}:${chosenLang}:${service.slug}:0`,
+                    callback_data: `${ServicesEventEnum.service_form}:${service.slug}:0`,
                   },
                 ],
                 [
                   {
                     text: '⬅️',
-                    callback_data: `${ServicesEventEnum.service_menu}:${chosenLang}`,
+                    callback_data: ServicesEventEnum.service_menu,
                   },
                 ],
               ],

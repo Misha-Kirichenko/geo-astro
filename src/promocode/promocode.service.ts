@@ -10,12 +10,12 @@ import { connections, MESSAGES } from 'src/common/constants';
 import {
   Promocode,
   PromocodeDocument,
-} from 'src/common/schemas/promocode.schema';
+} from 'src/database/schemas/promocode.schema';
 import { GeneratePromocodeDTO } from './dto/generate-promocode.dto';
 import {
   TgBotUser,
   TgBotUserDocument,
-} from 'src/common/schemas/tg-bot-user.schema';
+} from 'src/database/schemas/tg-bot-user.schema';
 import { messageUtil } from 'src/utils';
 import {
   IPromocode,
@@ -29,7 +29,7 @@ export class PromocodeService {
     private readonly promocodeModel: Model<PromocodeDocument>,
     @InjectModel(TgBotUser.name, connections.DB_MASTER.alias)
     private readonly tgBotUser: Model<TgBotUserDocument>,
-  ) {}
+  ) { }
 
   public async generatePromocode(
     tgId: number,
@@ -85,11 +85,11 @@ export class PromocodeService {
 
     const provider = user
       ? {
-          tgId: user.tgId,
-          firstName: user.firstName,
-          ...(user.lastName && { lastName: user.lastName }),
-          userName: user.userName,
-        }
+        tgId: user.tgId,
+        firstName: user.firstName,
+        ...(user.lastName && { lastName: user.lastName }),
+        userName: user.userName,
+      }
       : null;
 
     return {

@@ -4,34 +4,37 @@ import {
   NavigationEventsEnum,
   ServicesEventEnum,
 } from '../enums';
+import { NAV_MENU } from './chat-menu-constants';
+import { REGEXES } from 'src/common/constants';
 
 export const EVENT_REGEX = {
   lang_select: new RegExp(
     `^${LangEventEnum.lang_select}:(${Object.values(LangEnum).join('|')})`,
     'i',
   ),
-  lang_menu: new RegExp(
-    `^${LangEventEnum.lang_menu}:(${Object.values(LangEnum).join('|')})`,
-    'i',
-  ),
+  lang_menu: new RegExp(`^${LangEventEnum.lang_menu}`),
   lang_change: new RegExp(
     `^${LangEventEnum.lang_change}:(${Object.values(LangEnum).join('|')})`,
     'i',
   ),
-  main_menu: new RegExp(
-    `^${NavigationEventsEnum.main_menu}:(${Object.values(LangEnum).join('|')})`,
-    'i',
+  main_menu: new RegExp(`^${NavigationEventsEnum.main_menu}$`),
+  main_menu_nav: new RegExp(
+    `^(${Object.values(NAV_MENU.main_menu).join('|')})$`,
   ),
   service_select: new RegExp(
-    `^${ServicesEventEnum.service_select}:(${Object.values(LangEnum).join('|')}):(${Object.values(ServiceEnum).join('|')})`,
+    `^${ServicesEventEnum.service_select}:(${Object.values(ServiceEnum).join('|')})`,
     'i',
   ),
-  service_menu: new RegExp(
-    `^${ServicesEventEnum.service_menu}:(${Object.values(LangEnum).join('|')})`,
-    'i',
-  ),
+  service_menu: new RegExp(`^${ServicesEventEnum.service_menu}`),
   promocode: new RegExp('^/promo/([a-z0-9_-]{9,10})$', 'i'),
   service_form: new RegExp(
-    `^${ServicesEventEnum.service_form}:(${Object.values(LangEnum).join('|')}):(${Object.values(ServiceEnum).join('|')}):([0-9]{1,2})$`,
+    `^${ServicesEventEnum.service_form}:(${Object.values(ServiceEnum).join('|')}):(0)$`,
+    'i',
+  ),
+  form_data_input: new RegExp(
+    Object.values(REGEXES.FORM_DATA_REGEXES)
+      .map((r) => r.source)
+      .join('|'),
+    'iu',
   ),
 };

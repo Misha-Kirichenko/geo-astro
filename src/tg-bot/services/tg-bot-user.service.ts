@@ -5,7 +5,7 @@ import { LangEnum } from 'src/common/enums';
 import {
   TgBotUser,
   TgBotUserDocument,
-} from 'src/common/schemas/tg-bot-user.schema';
+} from 'src/database/schemas/tg-bot-user.schema';
 import { ITGUserPayload } from '../interfaces';
 import { NON_SUPPORTED_LANG_MESSAGE } from '../constants';
 import { connections } from 'src/common/constants';
@@ -19,12 +19,9 @@ export class TgBotUserService {
   /*todo: 
           1. write user caching logic
         */
-  public async saveUser(
-    userData: ITGUserPayload,
-    defaultUserLang: LangEnum,
-  ): Promise<void> {
+  public async saveUser(userData: ITGUserPayload): Promise<void> {
     if (!Object.values(LangEnum).includes(userData.lang as LangEnum)) {
-      const errorLang = userData.lang || defaultUserLang;
+      const errorLang = userData.lang;
       const errMessage =
         NON_SUPPORTED_LANG_MESSAGE[
         errorLang as keyof typeof NON_SUPPORTED_LANG_MESSAGE

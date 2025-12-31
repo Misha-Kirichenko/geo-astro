@@ -21,13 +21,13 @@ export class TgBotMenuHandler {
   constructor(
     private readonly tgBotUserService: TgBotUserService,
     private readonly localizationService: TgBotLocalizationService,
-  ) {}
+  ) { }
 
-  public showMainMenu = async (ctx: Context, lang: LangEnum): Promise<void> => {
-    const chosenLang = lang || ctx.from?.language_code || LangEnum.EN;
-    ctx.session.lang = chosenLang;
-    const existingUserActions = EXISTING_USER_ACTIONS[chosenLang];
-    const existingUserHeading = EXISTING_USER_ACTIONS_HEADING[chosenLang];
+  public showMainMenu = async (ctx: Context): Promise<void> => {
+    const existingUserActions =
+      EXISTING_USER_ACTIONS[ctx.session.lang as LangEnum];
+    const existingUserHeading =
+      EXISTING_USER_ACTIONS_HEADING[ctx.session.lang as LangEnum];
     await ctx.reply(existingUserHeading, {
       reply_markup: {
         inline_keyboard: existingUserActions,
@@ -41,7 +41,17 @@ export class TgBotMenuHandler {
       ctx.from?.id as number,
     );
     if (!foundUser) await this.localizationService.handleFirstGreeting(ctx);
-    else await this.showMainMenu(ctx, foundUser.lang as LangEnum);
+    else await this.showMainMenu(ctx);
+  }
+
+  @Hears(EVENT_REGEX.main_menu_nav)
+  async onNavMainMenu(@Ctx() ctx: RegExpContext): Promise<void> {
+    try {
+      ctx.session['step'] = NavigationEventsEnum.main_menu;
+      await this.showMainMenu(ctx);
+    } catch (e) {
+      console.error('nav main menu error:', e);
+    }
   }
 
   @Action(EVENT_REGEX.lang_select)
@@ -83,7 +93,7 @@ export class TgBotMenuHandler {
 
   @Action(EVENT_REGEX.lang_change)
   async onLangChange(@Ctx() ctx: RegExpContext): Promise<void> {
-    console.log(ctx.session);
+    console.log('ctx.session.step', ctx.session.step);
     try {
       const callback = this.showMainMenu;
       await this.localizationService.langChange(ctx, callback);
@@ -104,9 +114,8 @@ export class TgBotMenuHandler {
   @Action(EVENT_REGEX.main_menu)
   async onMainMenu(@Ctx() ctx: RegExpContext): Promise<void> {
     try {
-      const [, lang] = ctx.match;
       ctx.session['step'] = NavigationEventsEnum.main_menu;
-      await this.showMainMenu(ctx, lang as LangEnum);
+      await this.showMainMenu(ctx);
     } catch (e) {
       await ctx.answerCbQuery();
       console.error('main menu error:', e);

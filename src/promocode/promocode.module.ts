@@ -7,12 +7,12 @@ import { connections } from 'src/common/constants';
 import {
   Promocode,
   PromocodeSchema,
-} from 'src/common/schemas/promocode.schema';
+} from 'src/database/schemas/promocode.schema';
 import { JwtService } from '@nestjs/jwt';
 import {
   TgBotUser,
   TgBotUserSchema,
-} from 'src/common/schemas/tg-bot-user.schema';
+} from 'src/database/schemas/tg-bot-user.schema';
 
 @Module({
   imports: [
