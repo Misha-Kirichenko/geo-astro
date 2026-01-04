@@ -1,0 +1,67 @@
+services:
+  astro-bot-be:
+    build: ./BE
+    container_name: astro-bot-be
+    ports:
+      - "${PORT}:${PORT}"
+    networks:
+      - astro-bot-network
+    depends_on:
+      astro-bot-cache:
+        condition: service_healthy
+    environment:
+      - PORT=${PORT}
+      - NODE_ENV=${NODE_ENV}
+      - TG_BOT_TOKEN=${TG_BOT_TOKEN}
+      - TG_BOT_USER_DB_URL=${TG_BOT_USER_DB_URL}
+      - DASHBOARD_USER_DB_URL=${DASHBOARD_USER_DB_URL}
+      - DASHBOARD_ADMIN_DB_URL=${DASHBOARD_ADMIN_DB_URL}
+      - DB_MASTER=${DB_MASTER}
+      - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
+      - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
+      - ACCESS_TOKEN_EXPIRE_TIME=${ACCESS_TOKEN_EXPIRE_TIME}
+      - REFRESH_TOKEN_EXPIRE_TIME=${REFRESH_TOKEN_EXPIRE_TIME}
+      - ROOT_DEFAULT_PASSWORD=${ROOT_DEFAULT_PASSWORD}
+      - PASSWORD_SALT_ROUNDS=${PASSWORD_SALT_ROUNDS}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+    env_file:
+      - .env
+    restart: unless-stopped
+
+  astro-bot-cache:
+    image: redis:7-alpine
+    container_name: astro-bot-cache
+    networks:
+      - astro-bot-network
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep -q PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes",
+        "--appendfsync",
+        "everysec",
+        "--save",
+        "900",
+        "1",
+        "--save",
+        "300",
+        "10",
+        "--save",
+        "60",
+        "10000"
+      ]
+    restart: unless-stopped
+
+networks:
+  astro-bot-network:
+
+volumes:
+  redis-data:

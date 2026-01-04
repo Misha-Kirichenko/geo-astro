@@ -9,7 +9,7 @@ import { IAuthorizedRequest, ITokenPayload } from 'src/common/interfaces';
 
 @Injectable()
 export class RefreshJwtGuard implements CanActivate {
-  constructor(private readonly jwtService: JwtService) { }
+  constructor(private readonly jwtService: JwtService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<IAuthorizedRequest>();

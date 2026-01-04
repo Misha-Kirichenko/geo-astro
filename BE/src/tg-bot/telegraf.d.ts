@@ -1,7 +1,7 @@
 import { LangEnum, ServiceEnum } from 'src/common/enums';
 import 'telegraf';
-
 import { TMenuStep } from './types';
+import { ServiceFormFieldsEnum } from './enums';
 
 type TServiceFormData = Partial<Record<ServiceFormFieldsEnum, string>>;
 

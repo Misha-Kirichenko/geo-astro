@@ -50,14 +50,14 @@ import { NavKeyboardMiddleware } from './middlewares/nav-keyboard.middleware';
         if (!token) throw new Error('TG_BOT_TOKEN is not defined in .env');
 
         const langMiddleware = new LangMiddleware(moduleRef);
-        const keyboardMiddleware = new NavKeyboardMiddleware();
+        // const keyboardMiddleware = new NavKeyboardMiddleware();
 
         return {
           token,
           middlewares: [
             session(),
             langMiddleware.getMiddleware(),
-            keyboardMiddleware.getMiddleware(),
+            // keyboardMiddleware.getMiddleware(),
           ],
         };
       },

@@ -29,7 +29,7 @@ export class PromocodeService {
     private readonly promocodeModel: Model<PromocodeDocument>,
     @InjectModel(TgBotUser.name, connections.DB_MASTER.alias)
     private readonly tgBotUser: Model<TgBotUserDocument>,
-  ) { }
+  ) {}
 
   public async generatePromocode(
     tgId: number,
@@ -85,11 +85,11 @@ export class PromocodeService {
 
     const provider = user
       ? {
-        tgId: user.tgId,
-        firstName: user.firstName,
-        ...(user.lastName && { lastName: user.lastName }),
-        userName: user.userName,
-      }
+          tgId: user.tgId,
+          firstName: user.firstName,
+          ...(user.lastName && { lastName: user.lastName }),
+          userName: user.userName,
+        }
       : null;
 
     return {
