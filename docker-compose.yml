@@ -30,7 +30,7 @@ services:
     restart: unless-stopped
 
   astro-bot-cache:
-    image: redis:7-alpine
+    image: redis:alpine
     container_name: astro-bot-cache
     networks:
       - astro-bot-network

@@ -1,9 +1,7 @@
 import { LangEnum, ServiceEnum } from '../enums';
+import { IServiceItem } from '../interfaces';
 
-export const SERVICES: Record<
-  LangEnum,
-  { name: string; description: string; slug: ServiceEnum; price: number }[]
-> = {
+export const SERVICES: Record<LangEnum, IServiceItem[]> = {
   [LangEnum.EN]: [
     {
       name: '🪐 Natal Chart',

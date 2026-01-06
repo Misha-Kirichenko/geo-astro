@@ -152,3 +152,9 @@ export const CHOOSE_ACTION = {
   [LangEnum.RU]: 'Выберите действие',
   [LangEnum.GE]: 'აირჩიეთ ქმედება',
 };
+
+export const CACHED_PROMO_APPLIED = {
+  [LangEnum.EN]: '💥 Current service has a promo applied!',
+  [LangEnum.RU]: '💥На текущую услугу применён промокод!',
+  [LangEnum.GE]: '💥მიმდინარე მომსახურებაზე გამოყენებულია პრომოკოდი!',
+};

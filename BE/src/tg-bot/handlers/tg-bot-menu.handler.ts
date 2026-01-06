@@ -93,7 +93,6 @@ export class TgBotMenuHandler {
 
   @Action(EVENT_REGEX.lang_change)
   async onLangChange(@Ctx() ctx: RegExpContext): Promise<void> {
-    console.log('ctx.session.step', ctx.session.step);
     try {
       const callback = this.showMainMenu;
       await this.localizationService.langChange(ctx, callback);

@@ -10,13 +10,7 @@ declare module 'telegraf' {
     session: {
       lang?: LangEnum;
       step?: TMenuStep;
-      serviceItem?: {
-        promocode?: string;
-        stage?: number;
-        serviceSlug?: ServiceEnum;
-        form1?: TServiceFormData;
-        form2?: TServiceFormData;
-      };
+      serviceItem?: ServiceEnum;
     };
   }
 }

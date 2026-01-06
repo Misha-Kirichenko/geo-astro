@@ -22,8 +22,8 @@ import {
   ServicesEventEnum,
 } from '../enums';
 import { RegExpContext } from 'src/common/interfaces';
-import { BUY } from '../constants';
 import { TgBotPromocodeCacheService } from './tg-bot-promocode-cache.service';
+import { getKeyBoardWithPrice } from 'src/utils/get-keyboard-with-price';
 
 @Injectable()
 export class TgBotPromocodeService {
@@ -51,11 +51,11 @@ export class TgBotPromocodeService {
       if (!promocode) return;
       ctx.session['step'] = PromocodeEventEnum.promo_apply;
 
-      const applyDate = new Date().toISOString().substring(0, 10);
       const promo = await this.promocodeModel.findOne(
         { alias: promocode },
         'expiresAt discountPercent',
       );
+
       if (!promo) {
         const message = clientMessagesUtil.notExists(
           ClientMessageSourceEnum.promocode,
@@ -65,50 +65,41 @@ export class TgBotPromocodeService {
         return;
       }
 
-      if (applyDate > promo.expiresAt) {
-        const message = clientMessagesUtil.expired(
-          ClientMessageSourceEnum.promocode,
-          chosenLang,
-        );
-
-        await ctx.reply(message);
-        return;
-      }
-      //todo: check if promocode is already applied
+      //todo: check if promocode is already used by this user and validate usage limit
 
       const service = SERVICES[chosenLang].find(
-        (item) => item.slug === ctx.session.serviceItem?.serviceSlug,
+        (item) => item.slug === ctx.session.serviceItem,
       );
 
       if (service) {
-        const priceWithPromo =
-          service.price - (service.price * promo.discountPercent) / 100;
-        const message = clientMessagesUtil.promoApplied(chosenLang);
-        await ctx.reply(message);
-        //store pair of service name + promocode to determine final price later
-        this.promoCacheService.store(promocode, service.slug, ctx);
-        await ctx.reply(
-          `<b>${service?.name}</b>\n\n<i>${service?.description}</i>\n\n`,
-          {
-            parse_mode: 'HTML',
-            reply_markup: {
-              inline_keyboard: [
-                [
-                  {
-                    text: `${BUY[chosenLang]}: ❌ ${service.price}ლ / ✅ ${priceWithPromo}ლ `,
-                    callback_data: `${ServicesEventEnum.service_form}:${service.slug}:0`,
-                  },
-                ],
-                [
-                  {
-                    text: '⬅️',
-                    callback_data: ServicesEventEnum.service_menu,
-                  },
-                ],
-              ],
-            },
-          },
+        const applyDate = new Date().toISOString().substring(0, 10);
+        if (applyDate > promo.expiresAt) {
+          const message = clientMessagesUtil.expired(
+            ClientMessageSourceEnum.promocode,
+            chosenLang,
+          );
+
+          await ctx.reply(message);
+          return;
+        }
+        //store pair of service name and promocode to determine final price later
+        const promocodeData = {
+          alias: promocode,
+          discountPercent: promo.discountPercent,
+          expiresAt: promo.expiresAt,
+          usageLimit: promo.usageLimit,
+        };
+
+        const isStored = await this.promoCacheService.tryStore(
+          ctx.from?.id as number,
+          service.slug,
+          promocodeData,
         );
+
+        if (isStored) {
+          await ctx.reply(clientMessagesUtil.promoApplied(chosenLang));
+          await getKeyBoardWithPrice(ctx, service, promo.discountPercent);
+        }
       }
     }
 

@@ -1,3 +1,3 @@
 export * from './service-keyboard.interface';
 export * from './tg-user-payload.interface';
-export * from './cache-service.interface';
+export * from './promocode-cache.interface';

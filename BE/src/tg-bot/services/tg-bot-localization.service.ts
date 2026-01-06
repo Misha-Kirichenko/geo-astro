@@ -11,14 +11,19 @@ import { LangEnum, ServiceEnum } from 'src/common/enums';
 import { getLangKeyboard, messageUtil } from 'src/utils';
 import { TShowMainMenuCallback } from '../types';
 import { getServicesKeyboard } from 'src/utils/get-services-keyboard';
-import { NavigationEventsEnum, ServicesEventEnum } from '../enums';
+import { NavigationEventsEnum } from '../enums';
 import { SERVICES } from 'src/common/constants';
 import { TgBotUserService } from './tg-bot-user.service';
 import { RegExpContext } from 'src/common/interfaces';
+import { TgBotPromocodeCacheService } from './tg-bot-promocode-cache.service';
+import { getKeyBoardWithPrice } from 'src/utils/get-keyboard-with-price';
 
 @Injectable()
 export class TgBotLocalizationService {
-  constructor(private readonly tgBotUserService: TgBotUserService) { }
+  constructor(
+    private readonly tgBotUserService: TgBotUserService,
+    private readonly tgBotPromocodeCacheService: TgBotPromocodeCacheService,
+  ) { }
 
   public async handleFirstGreeting(ctx: Context): Promise<void> {
     const selectedLang = (ctx.session.lang ||
@@ -137,29 +142,21 @@ export class TgBotLocalizationService {
     );
 
     if (!service) throw new Error(messageUtil.ERRORS.notFound('Service'));
+    ctx.session['serviceItem'] = service.slug;
 
-    ctx.session['serviceItem'] = {};
-    ctx.session['serviceItem']['serviceSlug'] = service.slug;
-    await ctx.reply(
-      `<b>${service?.name}</b>\n\n<i>${service?.description}</i>\n\n`,
-      {
-        parse_mode: 'HTML',
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: `${BUY[ctx.session.lang]}: ${service?.price}ლ`,
-                callback_data: `${ServicesEventEnum.service_form}:${service.slug}:0`,
-              },
-              {
-                text: '⬅️',
-                callback_data: ServicesEventEnum.service_menu,
-              },
-            ],
-          ],
-        },
-      },
+    const cachedPromocode = await this.tgBotPromocodeCacheService.get(
+      ctx.from?.id as number,
+      service.slug,
     );
+
+    console.log('cachedPromocode', cachedPromocode);
+
+    if (cachedPromocode) {
+      await getKeyBoardWithPrice(ctx, service, cachedPromocode.discountPercent);
+    } else {
+      await getKeyBoardWithPrice(ctx, service);
+    }
+
     await ctx.answerCbQuery();
   }
 }

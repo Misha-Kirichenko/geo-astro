@@ -1,28 +1,24 @@
 // cache.module.ts
 import { Module } from '@nestjs/common';
 import { CacheModule } from '@nestjs/cache-manager';
-import { redisStore } from 'cache-manager-redis-yet';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { createKeyv } from '@keyv/redis';
 
 @Module({
   imports: [
     CacheModule.registerAsync({
-      useFactory: async () => {
-        const store = await redisStore({
-          socket: {
-            host: process.env.REDIS_HOST,
-            port: Number(process.env.REDIS_PORT),
-          },
-        });
-
+      isGlobal: true,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const host = configService.get<string>('REDIS_HOST');
+        const port = configService.get<number>('REDIS_PORT');
+        const redisUrl = `redis://${host}:${port}`;
         return {
-          store,
-          ttl: 0,
-          isCacheableValue: (v) =>
-            v !== undefined && v !== null && !(v instanceof Error),
+          stores: [createKeyv(redisUrl)],
         };
       },
-      isGlobal: true,
     }),
   ],
 })
-export class AppCacheModule { }
+export class AppCacheModule {}
