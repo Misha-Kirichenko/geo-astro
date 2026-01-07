@@ -31,6 +31,7 @@ import {
 
 import { LangMiddleware } from './middlewares/lang.middleware';
 import { NavKeyboardMiddleware } from './middlewares/nav-keyboard.middleware';
+import { TgBotFormCacheService } from './services/tg-bot-service-form-cache.service';
 
 @Module({
   imports: [
@@ -70,6 +71,7 @@ import { NavKeyboardMiddleware } from './middlewares/nav-keyboard.middleware';
     TgBotPromocodeService,
     TgBotPromocodeCacheService,
     TgBotServicesHandler,
+    TgBotFormCacheService,
     TgBotServiceFormService,
     LangMiddleware,
     NavKeyboardMiddleware,

@@ -21,26 +21,26 @@ export class TgBotServicesHandler {
     }
   }
 
-  // @Action(EVENT_REGEX.service_form)
-  // async onServiceForm(@Ctx() ctx: RegExpContext): Promise<void> {
-  //   try {
-  //     ctx.session['step'] = ServicesEventEnum.service_form;
-  //     await this.tgBotServiceFormService.getFistStageTip(ctx);
-  //   } catch (e) {
-  //     await ctx.answerCbQuery();
-  //     console.error('Services form error:', e);
-  //   }
-  // }
+  @Action(EVENT_REGEX.service_form)
+  async onServiceForm(@Ctx() ctx: RegExpContext): Promise<void> {
+    try {
+      ctx.session['step'] = ServicesEventEnum.service_form;
+      await this.tgBotServiceFormService.getFistStageTip(ctx);
+    } catch (e) {
+      await ctx.answerCbQuery();
+      console.error('Services form error:', e);
+    }
+  }
 
-  // @Hears(EVENT_REGEX.form_data_input)
-  // async onFormFill(@Ctx() ctx: RegExpContext): Promise<void> {
-  //   try {
-  //     if (ctx.session['step'] === ServicesEventEnum.service_form) {
-  //       await this.tgBotServiceFormService.runStage(ctx);
-  //     }
-  //     return;
-  //   } catch (e) {
-  //     console.error('form data input error:', e);
-  //   }
-  // }
+  @Hears(EVENT_REGEX.form_data_input)
+  async onFormFill(@Ctx() ctx: RegExpContext): Promise<void> {
+    try {
+      if (ctx.session['step'] === ServicesEventEnum.service_form) {
+        await this.tgBotServiceFormService.runStage(ctx);
+      }
+      return;
+    } catch (e) {
+      console.error('form data input error:', e);
+    }
+  }
 }
