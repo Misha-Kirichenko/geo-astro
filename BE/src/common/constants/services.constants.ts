@@ -46,13 +46,13 @@ export const SERVICES: Record<LangEnum, IServiceItem[]> = {
       price: 70,
     },
     {
-      name: '🃏 ტაროს კარტი (1 თვის)',
+      name: '🃏 ტარო (1 თვის)',
       slug: ServiceEnum.tarot_1mo,
       description: 'მიღეთ 1 თვის პერსონალური ტაროს რუკის რჩევები.',
       price: 100,
     },
     {
-      name: '🃏 ტაროს კარტი (1 კვირის)',
+      name: '🃏 ტარო (1 კვირის)',
       slug: ServiceEnum.tarot_1w,
       description: 'მიღეთ 1 კვირის რჩევები ტაროს კარტებისგან.',
       price: 30,
@@ -74,13 +74,13 @@ export const SERVICES: Record<LangEnum, IServiceItem[]> = {
       price: 70,
     },
     {
-      name: '🃏 Карты таро (на 1 месяц)',
+      name: '🃏 Таро (на 1 месяц)',
       slug: ServiceEnum.tarot_1mo,
       description: 'Получите персональные советы на месяц с помощью Таро.',
       price: 100,
     },
     {
-      name: '🃏 Карты таро (на 1 неделю)',
+      name: '🃏 Таро (на 1 неделю)',
       slug: ServiceEnum.tarot_1w,
       description: 'Рекомендации и предсказания на неделю с помощью Таро.',
       price: 30,

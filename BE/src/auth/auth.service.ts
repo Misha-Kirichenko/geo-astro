@@ -14,7 +14,7 @@ export class AuthService {
     @InjectModel(User.name, connections.DB_MASTER.alias)
     private readonly userModel: Model<UserDocument>,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
   public async login(
     login: string,

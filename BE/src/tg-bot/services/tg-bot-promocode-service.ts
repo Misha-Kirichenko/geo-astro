@@ -24,6 +24,7 @@ import {
 import { RegExpContext } from 'src/common/interfaces';
 import { TgBotPromocodeCacheService } from './tg-bot-promocode-cache.service';
 import { getKeyBoardWithPrice } from 'src/utils/get-keyboard-with-price';
+import { TgBotFormCacheService } from './tg-bot-service-form-cache.service';
 
 @Injectable()
 export class TgBotPromocodeService {
@@ -34,6 +35,7 @@ export class TgBotPromocodeService {
     private readonly promocodeModel: Model<PromocodeDocument>,
     @InjectModel(PromocodeUsage.name, connections.DB_MASTER.alias)
     private readonly promocodeUsageModel: Model<PromocodeUsageDocument>,
+    private readonly tgBotFormCacheService: TgBotFormCacheService,
     private readonly promoCacheService: TgBotPromocodeCacheService,
   ) { }
 
@@ -96,9 +98,23 @@ export class TgBotPromocodeService {
           promocodeData,
         );
 
+        const cachedFormData = await this.tgBotFormCacheService.getFormData(
+          ctx.from?.id as number,
+          service.slug,
+        );
+
         if (isStored) {
+          const keyBoardWithPriceParamsObj = {
+            ctx,
+            service,
+            ...(isStored && {
+              discountPercent: promo.discountPercent,
+            }),
+            ...(cachedFormData && { formDataStage: cachedFormData.stage }),
+          };
+
           await ctx.reply(clientMessagesUtil.promoApplied(chosenLang));
-          await getKeyBoardWithPrice(ctx, service, promo.discountPercent);
+          await getKeyBoardWithPrice(keyBoardWithPriceParamsObj);
         }
       }
     }

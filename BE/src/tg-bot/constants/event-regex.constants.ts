@@ -21,6 +21,9 @@ export const EVENT_REGEX = {
   main_menu_nav: new RegExp(
     `^(${Object.values(NAV_MENU.main_menu).join('|')})$`,
   ),
+  prev_stage_nav: new RegExp(
+    `^(${Object.values(NAV_MENU.prev_step).join('|')})$`,
+  ),
   service_select: new RegExp(
     `^${ServicesEventEnum.service_select}:(${Object.values(ServiceEnum).join('|')})`,
     'i',
@@ -29,6 +32,10 @@ export const EVENT_REGEX = {
   promocode: new RegExp('^/promo/([a-z0-9_-]{9,10})$', 'i'),
   service_form: new RegExp(
     `^${ServicesEventEnum.service_form}:(${Object.values(ServiceEnum).join('|')}):(0)$`,
+    'i',
+  ),
+  service_form_continue: new RegExp(
+    `^${ServicesEventEnum.service_form_fill_continue}:(${Object.values(ServiceEnum).join('|')}):([0-9]{1,2})$`,
     'i',
   ),
   form_data_input: new RegExp(

@@ -42,6 +42,7 @@ export class TgBotMenuHandler {
     );
     if (!foundUser) await this.localizationService.handleFirstGreeting(ctx);
     else await this.showMainMenu(ctx);
+    await ctx.answerCbQuery();
   }
 
   @Hears(EVENT_REGEX.main_menu_nav)
@@ -50,6 +51,7 @@ export class TgBotMenuHandler {
       ctx.session['step'] = NavigationEventsEnum.main_menu;
       await this.showMainMenu(ctx);
     } catch (e) {
+      await ctx.answerCbQuery();
       console.error('nav main menu error:', e);
     }
   }
@@ -78,6 +80,7 @@ export class TgBotMenuHandler {
     try {
       ctx.session['step'] = LangEventEnum.lang_menu;
       await this.localizationService.getLangMenu(ctx);
+      await ctx.answerCbQuery();
     } catch (e: unknown) {
       const errorMessage =
         e instanceof Error && e.message
@@ -115,6 +118,7 @@ export class TgBotMenuHandler {
     try {
       ctx.session['step'] = NavigationEventsEnum.main_menu;
       await this.showMainMenu(ctx);
+      await ctx.answerCbQuery();
     } catch (e) {
       await ctx.answerCbQuery();
       console.error('main menu error:', e);
@@ -126,6 +130,7 @@ export class TgBotMenuHandler {
     try {
       ctx.session['step'] = ServicesEventEnum.service_select;
       await this.localizationService.getService(ctx);
+      await ctx.answerCbQuery();
     } catch (e) {
       await ctx.answerCbQuery();
       console.error('Services menu error:', e);
@@ -137,6 +142,7 @@ export class TgBotMenuHandler {
     try {
       ctx.session['step'] = ServicesEventEnum.service_menu;
       await this.localizationService.showServicesMenu(ctx);
+      await ctx.answerCbQuery();
     } catch (e) {
       await ctx.answerCbQuery();
       console.error('Services menu error:', e);

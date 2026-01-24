@@ -64,7 +64,7 @@ export const EXISTING_USER_ACTIONS = {
         callback_data: `packages: view`,
       },
       {
-        text: '🛎 მომსახურეობები',
+        text: '🛎 სერვისები',
         callback_data: ServicesEventEnum.service_menu,
       },
     ],
@@ -109,19 +109,37 @@ export const NON_SUPPORTED_LANG_MESSAGE = {
 export const SERVICE_LIST_HEADING = {
   [LangEnum.EN]: `🛎️ Services Menu`,
   [LangEnum.RU]: `🛎️ Меню услуг`,
-  [LangEnum.GE]: '🛎️ მომსახურეობების მენიუ',
+  [LangEnum.GE]: '🛎️ სერვისები',
 };
 
 export const SERVICE_PRICES = {
-  [LangEnum.EN]: 'price',
-  [LangEnum.RU]: 'цена',
-  [LangEnum.GE]: 'ფასი',
+  [LangEnum.EN]: '💰 Price',
+  [LangEnum.RU]: '💰 Цена',
+  [LangEnum.GE]: '💰 ფასი',
 };
 
 export const BUY = {
-  [LangEnum.EN]: 'Buy',
-  [LangEnum.RU]: 'Приобрести',
-  [LangEnum.GE]: 'შეძენა',
+  [LangEnum.EN]: '🛒 Buy',
+  [LangEnum.RU]: '🛒 Приобрести',
+  [LangEnum.GE]: '🛒 შეძენა',
+};
+
+export const FILL_FORM_MENU_TIP = {
+  [LangEnum.EN]: '📝 Fill the form',
+  [LangEnum.RU]: '📝 Заполнить анкету',
+  [LangEnum.GE]: '📝 ანკეტის შევსება',
+};
+
+export const FILL_FORM_FROM_SCRATCH = {
+  [LangEnum.EN]: '📝🔄 Fill the form from scratch',
+  [LangEnum.RU]: '📝🔄 Заполнить анкету заново',
+  [LangEnum.GE]: '📝🔄 ანკეტის თავიდან შევსება',
+};
+
+export const CONTINUE_FORM_FILL = {
+  [LangEnum.EN]: '📝➡️ Continue',
+  [LangEnum.RU]: '📝➡️ Продолжить',
+  [LangEnum.GE]: '📝➡️ გაგრძლება',
 };
 
 export const NAV_MENU = {
@@ -129,6 +147,11 @@ export const NAV_MENU = {
     [LangEnum.EN]: '🏠 Main Menu',
     [LangEnum.RU]: '🏠 Главное меню',
     [LangEnum.GE]: '🏠 მთავარი მენიუ',
+  },
+  prev_step: {
+    [LangEnum.EN]: '⬅️ Previous step',
+    [LangEnum.RU]: '⬅️ Предыдущий шаг',
+    [LangEnum.GE]: '⬅️ წინა ბიჯი',
   },
   services_button: {
     [LangEnum.EN]: SERVICE_LIST_HEADING[LangEnum.EN],
@@ -141,20 +164,34 @@ export const NAV_MENU = {
     [LangEnum.GE]: '🔄 თავიდან შევსება',
   },
   go_to_payment: {
-    [LangEnum.EN]: '💵  Go to payment',
-    [LangEnum.RU]: '💵  Перейти к оплате',
-    [LangEnum.GE]: '💵 გადახდაზე გადასვლა',
+    [LangEnum.EN]: '💳 Go to payment',
+    [LangEnum.RU]: '💳 Перейти к оплате',
+    [LangEnum.GE]: '💳 გადახდაზე გადასვლა',
   },
 };
 
 export const CHOOSE_ACTION = {
-  [LangEnum.EN]: 'Choose action',
-  [LangEnum.RU]: 'Выберите действие',
-  [LangEnum.GE]: 'აირჩიეთ ქმედება',
+  [LangEnum.EN]:
+    '🆗 Service form is succesfully filled. Please choose the action',
+  [LangEnum.RU]:
+    '🆗 Анкета услуги успешно заполнена. Пожалуйста, выберите действие',
+  [LangEnum.GE]: '🆗 სერვისის ანკეტა წარმატებით შეივსო. გთხოვთ აირჩიოთ ქმედება',
 };
 
 export const CACHED_PROMO_APPLIED = {
-  [LangEnum.EN]: '💥 Current service has a promo applied!',
-  [LangEnum.RU]: '💥На текущую услугу применён промокод!',
-  [LangEnum.GE]: '💥მიმდინარე მომსახურებაზე გამოყენებულია პრომოკოდი!',
+  [LangEnum.EN]: '💥 Current service has a promo applied',
+  [LangEnum.RU]: '💥 На текущую услугу применён промокод',
+  [LangEnum.GE]: '💥 მიმდინარე სერვისზე გამოყენებულია პრომოკოდი',
+};
+
+export const BACK = {
+  [LangEnum.EN]: '⬅️ Back',
+  [LangEnum.RU]: '⬅️ Назад',
+  [LangEnum.GE]: '⬅️ უკან',
+};
+
+export const DESCRIPTION = {
+  [LangEnum.EN]: '📜 Description',
+  [LangEnum.RU]: '📜 Описание',
+  [LangEnum.GE]: '📜 აღწერა',
 };

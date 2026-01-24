@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Context } from 'telegraf';
 import {
-  BUY,
+  BACK,
   CHANGE_LANG_MESSAGE,
   GREETING_MESSAGE,
   LANG_CHANGE_SUCCESS_MESSAGE,
@@ -17,12 +17,14 @@ import { TgBotUserService } from './tg-bot-user.service';
 import { RegExpContext } from 'src/common/interfaces';
 import { TgBotPromocodeCacheService } from './tg-bot-promocode-cache.service';
 import { getKeyBoardWithPrice } from 'src/utils/get-keyboard-with-price';
+import { TgBotFormCacheService } from './tg-bot-service-form-cache.service';
 
 @Injectable()
 export class TgBotLocalizationService {
   constructor(
     private readonly tgBotUserService: TgBotUserService,
     private readonly tgBotPromocodeCacheService: TgBotPromocodeCacheService,
+    private readonly tgBotFormCacheService: TgBotFormCacheService,
   ) { }
 
   public async handleFirstGreeting(ctx: Context): Promise<void> {
@@ -84,14 +86,13 @@ export class TgBotLocalizationService {
           ...langChangeKeyboard,
           [
             {
-              text: '⬅️',
+              text: BACK[ctx.session.lang as LangEnum],
               callback_data: NavigationEventsEnum.main_menu,
             },
           ],
         ],
       },
     });
-    await ctx.answerCbQuery();
   }
 
   public async langChange(
@@ -116,7 +117,7 @@ export class TgBotLocalizationService {
           ...servicesKeyboardItems,
           [
             {
-              text: '⬅️',
+              text: BACK[ctx.session.lang as LangEnum],
               callback_data: NavigationEventsEnum.main_menu,
             },
           ],
@@ -129,16 +130,15 @@ export class TgBotLocalizationService {
       ctx.session.lang as keyof typeof SERVICE_LIST_HEADING
       ];
     await ctx.reply(serviceMenuHeading, servicesKeyboard);
-    await ctx.answerCbQuery();
   }
 
   public async getService(ctx: RegExpContext): Promise<void> {
-    const serviceSlug = ctx.match[1];
+    const serviceSlug = ctx.match[1] as ServiceEnum;
     if (!ctx.session.lang) throw new Error();
     if (!serviceSlug) throw new Error('Invalid service slug');
 
     const service = SERVICES[ctx.session.lang].find(
-      (service) => service.slug === (serviceSlug as ServiceEnum),
+      (service) => service.slug === serviceSlug,
     );
 
     if (!service) throw new Error(messageUtil.ERRORS.notFound('Service'));
@@ -149,14 +149,20 @@ export class TgBotLocalizationService {
       service.slug,
     );
 
-    console.log('cachedPromocode', cachedPromocode);
+    const cachedFormData = await this.tgBotFormCacheService.getFormData(
+      ctx.from?.id as number,
+      serviceSlug,
+    );
 
-    if (cachedPromocode) {
-      await getKeyBoardWithPrice(ctx, service, cachedPromocode.discountPercent);
-    } else {
-      await getKeyBoardWithPrice(ctx, service);
-    }
+    const keyBoardWithPriceParamsObj = {
+      ctx,
+      service,
+      ...(cachedPromocode && {
+        discountPercent: cachedPromocode.discountPercent,
+      }),
+      ...(cachedFormData && { formDataStage: cachedFormData.stage }),
+    };
 
-    await ctx.answerCbQuery();
+    await getKeyBoardWithPrice(keyBoardWithPriceParamsObj);
   }
 }

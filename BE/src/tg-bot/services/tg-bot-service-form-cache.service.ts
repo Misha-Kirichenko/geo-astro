@@ -12,8 +12,9 @@ export class TgBotFormCacheService {
     structure: tg-bot:form:<tgBotUserId>:<serviceSlug> => 
     {
       form1: {fullName: string, birthDate: string, birthTime: string}, 
-      form2?: {fullName: string, birthDate: string, birthTime: string}, 
-      createdAt: number, updatedAt: number
+      form2: {fullName?: string, birthDate?: string, birthTime?: string}, 
+      createdAt: number, 
+      updatedAt: number
       stage: number
     }
     

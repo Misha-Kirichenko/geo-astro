@@ -40,9 +40,7 @@ export class PromocodeService {
 
       const user = await this.tgBotUser.findOne({ tgId }, 'firstName lastName');
 
-      if (!user) {
-        throw new NotFoundException('User was not found');
-      }
+      if (!user) throw new NotFoundException('User was not found');
 
       const randomString = Math.random().toString(36).substring(2, 6);
 

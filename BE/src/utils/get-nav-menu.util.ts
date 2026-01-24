@@ -14,18 +14,24 @@ export const getNavMenu = (ctx: RegExpContext, formData: TPartialForms) => {
       NAV_MENU.services_button[lang as LangEnum],
     ],
   ];
+
   const formFillStarted = formData.form1
     ? Boolean(Object.keys(formData.form1).length)
     : false;
+
   if (step && step === ServicesEventEnum.service_form && formFillStarted) {
-    navMenu.unshift([NAV_MENU.retry_button[lang as LangEnum]]);
+    navMenu.unshift([
+      NAV_MENU.retry_button[lang as LangEnum],
+      NAV_MENU.prev_step[lang as LangEnum],
+    ]);
   }
   const serviceFormValidationStages = SERVICE_FORM_VALIDATION(lang as LangEnum);
   const serviceFormValidationStagesTotal =
     serviceFormValidationStages[serviceItem as ServiceEnum]?.length;
   if (formData.stage === serviceFormValidationStagesTotal) {
-    navMenu[0].unshift(NAV_MENU.go_to_payment[lang as LangEnum]);
+    navMenu.unshift([NAV_MENU.go_to_payment[lang as LangEnum]]);
   }
-  const navMenuKeyboard = Markup.keyboard(navMenu).resize().oneTime();
+
+  const navMenuKeyboard = Markup.keyboard(navMenu).resize().oneTime(true);
   return navMenuKeyboard;
 };

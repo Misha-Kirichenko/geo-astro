@@ -11,13 +11,36 @@ import { TFullFormData, TPartialForms } from '../types';
 @Injectable()
 export class TgBotServiceFormService {
   constructor(private readonly formCacheService: TgBotFormCacheService) { }
-  public async runStage(ctx: RegExpContext): Promise<void> {
-    if (!ctx.session.serviceItem || !ctx.session.serviceItem) return;
-    const fieldValue = ctx.match[0];
+  public async runPrevStage(ctx: RegExpContext): Promise<void> {
+    if (!ctx.session.serviceItem) return;
     const currentFormData = await this.formCacheService.getFormData(
       ctx.from!.id,
       ctx.session.serviceItem,
     );
+
+    if (!currentFormData) return;
+    if (currentFormData.stage) currentFormData.stage--;
+    await this.formCacheService.setFormData(
+      ctx.from?.id as number,
+      ctx.session.serviceItem,
+      currentFormData,
+    );
+    await this.getNextStageTip(ctx, currentFormData);
+  }
+
+  public async runStage(
+    ctx: RegExpContext,
+    existingForm?: TFullFormData | TPartialForms | null,
+  ): Promise<void> {
+    if (!ctx.session.serviceItem) return;
+    const fieldValue = ctx.match[0];
+
+    const currentFormData =
+      existingForm ||
+      (await this.formCacheService.getFormData(
+        ctx.from!.id,
+        ctx.session.serviceItem,
+      ));
 
     if (!currentFormData) return;
 
@@ -29,6 +52,7 @@ export class TgBotServiceFormService {
     if (!rules) return;
     const rule = rules[Number(currentFormData?.stage)];
     const fieldValid = rule.validator(fieldValue);
+
     if (!fieldValid) {
       await ctx.reply(rule.errorMessage);
       return;
@@ -54,17 +78,18 @@ export class TgBotServiceFormService {
     await this.getNextStageTip(ctx, currentFormData);
   }
 
-  private async getNextStageTip(
+  public async getNextStageTip(
     ctx: RegExpContext,
     formData: Partial<IFormData> | TFullFormData | TPartialForms,
   ): Promise<void> {
-    //todo - write logic if session is lost
+    //todo - write logic for case session is lost
     if (
       !ctx.session.serviceItem ||
       !ctx.session.serviceItem ||
       !('stage' in formData)
-    )
+    ) {
       return;
+    }
     const currentLang =
       ctx.session.lang || ctx.from?.language_code || LangEnum.EN;
     const serviceFormValidationObj = SERVICE_FORM_VALIDATION(
@@ -80,7 +105,6 @@ export class TgBotServiceFormService {
       const replyKeyboard = getNavMenu(ctx, formData);
       await ctx.reply(CHOOSE_ACTION[currentLang as LangEnum], replyKeyboard);
     }
-    console.log(ctx.session.serviceItem);
     return;
   }
 
@@ -104,7 +128,5 @@ export class TgBotServiceFormService {
       const replyKeyboard = getNavMenu(ctx, formData);
       await ctx.reply(rule.fieldTip, replyKeyboard);
     }
-
-    await ctx.answerCbQuery();
   }
 }
