@@ -3,14 +3,29 @@ import { LangEnum, ServiceEnum } from 'src/common/enums';
 import { RegExpContext } from 'src/common/interfaces';
 import { CHOOSE_ACTION, FILL_FORM } from '../constants';
 import { SERVICE_FORM_VALIDATION } from '../validation/service-form.validation';
-import { getNavMenu } from 'src/utils';
+import { getFormPreviewUtil, getNavMenu } from 'src/utils';
 import { TgBotFormCacheService } from './tg-bot-service-form-cache.service';
 import { IFormData } from '../interfaces';
 import { TFullFormData, TPartialForms } from '../types';
+import { Context } from 'telegraf';
 
 @Injectable()
 export class TgBotServiceFormService {
   constructor(private readonly formCacheService: TgBotFormCacheService) { }
+  public async showFormPreview(
+    ctx: Context,
+    existingForm: TFullFormData | TPartialForms,
+  ): Promise<void> {
+    const { serviceItem: serviceName, lang } = ctx.session;
+    const formPreview = getFormPreviewUtil(
+      serviceName as ServiceEnum,
+      existingForm,
+      lang as LangEnum,
+    );
+
+    await ctx.reply(formPreview);
+  }
+
   public async runPrevStage(ctx: RegExpContext): Promise<void> {
     if (!ctx.session.serviceItem) return;
     const currentFormData = await this.formCacheService.getFormData(
@@ -35,14 +50,19 @@ export class TgBotServiceFormService {
     if (!ctx.session.serviceItem) return;
     const fieldValue = ctx.match[0];
 
-    const currentFormData =
+    let currentFormData =
       existingForm ||
       (await this.formCacheService.getFormData(
         ctx.from!.id,
         ctx.session.serviceItem,
       ));
 
-    if (!currentFormData) return;
+    if (!currentFormData) {
+      currentFormData = await this.formCacheService.ininializeForm(
+        ctx.from!.id,
+        ctx.session.serviceItem,
+      );
+    }
 
     const { lang: currentLang } = ctx.session;
     const serviceFormValidationObj = SERVICE_FORM_VALIDATION(

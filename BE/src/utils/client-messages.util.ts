@@ -1,7 +1,5 @@
-import { LangEnum, ServiceEnum } from 'src/common/enums';
+import { LangEnum } from 'src/common/enums';
 import { ClientMessageSourceEnum } from 'src/tg-bot/enums';
-import { IFormData } from 'src/tg-bot/interfaces';
-import { TFullFormData, TPartialForms } from 'src/tg-bot/types';
 
 export const clientMessagesUtil = {
   notExists: (source: ClientMessageSourceEnum, lang: LangEnum): string => {
@@ -60,45 +58,5 @@ export const clientMessagesUtil = {
 
     const message = frase[lang];
     return message;
-  },
-
-  getCachedFormDataMessage: (
-    service: ServiceEnum,
-    lang: LangEnum,
-    formData: TPartialForms,
-  ) => {
-    // const frase: Record<LangEnum, string> = {
-    //   [LangEnum.EN]: `Your form data at this moment`,
-    //   [LangEnum.GE]: 'თქვენი ანკეტა',
-    //   [LangEnum.RU]: 'Ваша анкета сейчас',
-    // };
-
-    // const translations = {
-    //   fullName: {
-    //     [LangEnum.EN]: 'Full name',
-    //     [LangEnum.RU]: 'Имя',
-    //     [LangEnum.GE]: 'სახელი',
-    //   },
-    //   birthDate: {
-    //     [LangEnum.EN]: 'Birth Date',
-    //     [LangEnum.RU]: 'День рождения',
-    //     [LangEnum.GE]: 'დაბადების თარიღი',
-    //   },
-    //   birthTime: {
-    //     [LangEnum.EN]: 'Birth Time',
-    //     [LangEnum.RU]: 'Время рождения',
-    //     [LangEnum.GE]: 'დაბადების დრო',
-    //   },
-    // };
-
-    // const data = Object.entries(formData.form1)
-    //   .map((el) => {
-    //     const [field, fieldValue] = el;
-    //     const fieldName = translations[field][lang];
-
-    //     const msg = `${fieldName}: ${fieldValue}`;
-    //     return msg;
-    //   })
-    //   .join('\n');
   },
 };

@@ -67,6 +67,7 @@ export class TgBotServicesHandler {
         ctx.session.serviceItem as ServiceEnum,
       );
       if (formData) {
+        await this.tgBotServiceFormService.showFormPreview(ctx, formData);
         await this.tgBotServiceFormService.getNextStageTip(ctx, formData);
       }
 

@@ -14,6 +14,7 @@ import { createKeyv } from '@keyv/redis';
         const host = configService.get<string>('REDIS_HOST');
         const port = configService.get<number>('REDIS_PORT');
         const redisUrl = `redis://${host}:${port}`;
+        console.log('redis url', redisUrl);
         return {
           stores: [createKeyv(redisUrl)],
         };
