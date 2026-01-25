@@ -168,6 +168,11 @@ export const NAV_MENU = {
     [LangEnum.RU]: '💳 Перейти к оплате',
     [LangEnum.GE]: '💳 გადახდაზე გადასვლა',
   },
+  form_preview: {
+    [LangEnum.EN]: '📋 View form',
+    [LangEnum.RU]: '📋 Посмотреть анкету',
+    [LangEnum.GE]: '📋 ანკეტის ნახვა',
+  },
 };
 
 export const CHOOSE_ACTION = {

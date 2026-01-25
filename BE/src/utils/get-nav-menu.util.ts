@@ -29,9 +29,12 @@ export const getNavMenu = (ctx: RegExpContext, formData: TPartialForms) => {
   const serviceFormValidationStagesTotal =
     serviceFormValidationStages[serviceItem as ServiceEnum]?.length;
   if (formData.stage === serviceFormValidationStagesTotal) {
-    navMenu.unshift([NAV_MENU.go_to_payment[lang as LangEnum]]);
+    navMenu.unshift([
+      NAV_MENU.go_to_payment[lang as LangEnum],
+      NAV_MENU.form_preview[lang as LangEnum],
+    ]);
   }
 
-  const navMenuKeyboard = Markup.keyboard(navMenu).resize().oneTime(true);
+  const navMenuKeyboard = Markup.keyboard(navMenu).resize().oneTime();
   return navMenuKeyboard;
 };

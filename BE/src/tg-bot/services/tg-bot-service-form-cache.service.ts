@@ -25,6 +25,37 @@ export class TgBotFormCacheService {
     return `${this.FORM_PREFIX}:${tgBotUserId}:${serviceSlug}`;
   }
 
+  public async resetFormDataToPrevStage(
+    tgBotUserId: number,
+    serviceSlug: ServiceEnum,
+    currentFormData: TFullFormData | TPartialForms,
+  ): Promise<void> {
+    const { stage } = currentFormData;
+    if (stage === 0) {
+      const key = this.makeKey(tgBotUserId, serviceSlug);
+      await this.cache.del(key);
+      return;
+    }
+    const newFormData = { ...currentFormData };
+    if (serviceSlug === ServiceEnum.synastry) {
+      const form1Keys = Object.keys(newFormData.form1);
+      if (stage > form1Keys.length - 1) {
+        const form2Keys = Object.keys(newFormData.form2);
+        const lastKey = form2Keys[form2Keys.length - 1];
+        delete newFormData.form2[lastKey];
+      } else {
+        const lastKey = form1Keys[form1Keys.length - 1];
+        delete newFormData.form1[lastKey];
+      }
+    } else {
+      const formDataKeys = Object.keys(newFormData.form1);
+      const lastKey = formDataKeys[formDataKeys.length - 1];
+      delete newFormData.form1[lastKey];
+    }
+
+    await this.setFormData(tgBotUserId, serviceSlug, newFormData);
+  }
+
   public async ininializeForm(
     tgBotUserId: number,
     serviceSlug: ServiceEnum,

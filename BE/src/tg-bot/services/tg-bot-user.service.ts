@@ -15,7 +15,7 @@ export class TgBotUserService {
   constructor(
     @InjectModel(TgBotUser.name, connections.DB_MASTER.alias)
     private readonly tgBotUserModel: Model<TgBotUserDocument>,
-  ) { }
+  ) {}
   /*todo: 
           1. write user caching logic
         */

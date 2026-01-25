@@ -50,22 +50,24 @@ export const getFormPreviewUtil = (
     [LangEnum.GE]: '📋 თქვენი ანკეტა',
   };
 
-  formDataFinalString += formDataHeading[lang] + '\n\n\n\n';
+  formDataFinalString += '<b>' + formDataHeading[lang] + '</b>' + '\n\n\n\n';
 
   if (type === ServiceEnum.synastry) {
-    formDataFinalString += vocabulary[lang].partner1 + '\n';
+    formDataFinalString += '<b>' + vocabulary[lang].partner1 + '</b>' + '\n';
 
     const firstFormEntries = Object.entries(formData.form1) as Array<
       [string, string]
     >;
+
     const firstFormString =
       getFormDataFieldsStringFromEntries(firstFormEntries);
-    formDataFinalString += '\n' + firstFormString;
+    formDataFinalString += '\n' + firstFormString + '\n\n\n\n';
 
     const secondPartnerFormFilled = Boolean(Object.keys(formData.form2).length);
 
     if (secondPartnerFormFilled) {
-      formDataFinalString += '\n\n' + vocabulary[lang].partner2 + '\n';
+      formDataFinalString +=
+        '<b>' + vocabulary[lang].partner2 + '</b>' + '\n\n';
 
       const secondFormEntries = Object.entries(formData.form2) as Array<
         [string, string]
@@ -74,7 +76,7 @@ export const getFormPreviewUtil = (
       const secondFormString =
         getFormDataFieldsStringFromEntries(secondFormEntries);
 
-      formDataFinalString += '\n' + secondFormString;
+      formDataFinalString += secondFormString;
     }
   } else {
     const formDataFieldsEntries = Object.entries(formData.form1) as Array<

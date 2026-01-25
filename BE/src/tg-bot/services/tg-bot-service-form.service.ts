@@ -7,7 +7,7 @@ import { getFormPreviewUtil, getNavMenu } from 'src/utils';
 import { TgBotFormCacheService } from './tg-bot-service-form-cache.service';
 import { IFormData } from '../interfaces';
 import { TFullFormData, TPartialForms } from '../types';
-import { Context } from 'telegraf';
+import { Context, Markup } from 'telegraf';
 
 @Injectable()
 export class TgBotServiceFormService {
@@ -23,7 +23,9 @@ export class TgBotServiceFormService {
       lang as LangEnum,
     );
 
-    await ctx.reply(formPreview);
+    await ctx.reply(formPreview, {
+      parse_mode: 'HTML' as const,
+    });
   }
 
   public async runPrevStage(ctx: RegExpContext): Promise<void> {
@@ -35,11 +37,17 @@ export class TgBotServiceFormService {
 
     if (!currentFormData) return;
     if (currentFormData.stage) currentFormData.stage--;
-    await this.formCacheService.setFormData(
+    await this.formCacheService.resetFormDataToPrevStage(
       ctx.from?.id as number,
       ctx.session.serviceItem,
       currentFormData,
     );
+    // await this.formCacheService.setFormData(
+    //   ctx.from?.id as number,
+    //   ctx.session.serviceItem,
+    //   currentFormData,
+    // );
+
     await this.getNextStageTip(ctx, currentFormData);
   }
 
@@ -71,6 +79,7 @@ export class TgBotServiceFormService {
     const rules = serviceFormValidationObj[ctx.session.serviceItem];
     if (!rules) return;
     const rule = rules[Number(currentFormData?.stage)];
+    if (!rule) return;
     const fieldValid = rule.validator(fieldValue);
 
     if (!fieldValid) {
@@ -120,10 +129,16 @@ export class TgBotServiceFormService {
     if (formData.stage < rules.length) {
       const rule = rules[Number(formData.stage)];
       const replyKeyboard = getNavMenu(ctx, formData);
-      await ctx.reply(rule.fieldTip, replyKeyboard);
+      await ctx.reply(rule.fieldTip, {
+        ...Markup.removeKeyboard(),
+        ...replyKeyboard,
+      });
     } else {
       const replyKeyboard = getNavMenu(ctx, formData);
-      await ctx.reply(CHOOSE_ACTION[currentLang as LangEnum], replyKeyboard);
+      await ctx.reply(CHOOSE_ACTION[currentLang as LangEnum], {
+        ...Markup.removeKeyboard(),
+        ...replyKeyboard,
+      });
     }
     return;
   }
