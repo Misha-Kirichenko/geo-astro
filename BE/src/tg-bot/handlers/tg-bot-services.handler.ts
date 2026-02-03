@@ -13,14 +13,13 @@ export class TgBotServicesHandler {
     private readonly tgBotPromocodeService: TgBotPromocodeService,
     private readonly tgBotServiceFormService: TgBotServiceFormService,
     private readonly formCacheService: TgBotFormCacheService,
-  ) {}
+  ) { }
 
   @Hears(EVENT_REGEX.promocode)
   async onPromocodeEnter(@Ctx() ctx: RegExpContext): Promise<void> {
     try {
       await this.tgBotPromocodeService.tryGetPriceWithPromo(ctx);
     } catch (e) {
-      await ctx.answerCbQuery();
       console.error('promocode input error:', e);
     }
   }
@@ -43,7 +42,29 @@ export class TgBotServicesHandler {
       if (ctx.session['step'] === ServicesEventEnum.service_form)
         await this.tgBotServiceFormService.runPrevStage(ctx);
     } catch (e) {
-      await ctx.answerCbQuery();
+      console.error('form data input error:', e);
+    }
+  }
+
+  @Hears(EVENT_REGEX.view_form)
+  async onViewForm(@Ctx() ctx: RegExpContext): Promise<void> {
+    try {
+      const formData = await this.formCacheService.getFormData(
+        ctx.from?.id as number,
+        ctx.session.serviceItem as ServiceEnum,
+      );
+      if (formData)
+        await this.tgBotServiceFormService.showFormPreview(ctx, formData);
+    } catch (e) {
+      console.error('form data input error:', e);
+    }
+  }
+
+  @Hears(EVENT_REGEX.fill_form_from_scratch)
+  async onFillFormFromScratch(@Ctx() ctx: RegExpContext): Promise<void> {
+    try {
+      await this.tgBotServiceFormService.startFromScratch(ctx);
+    } catch (e) {
       console.error('form data input error:', e);
     }
   }

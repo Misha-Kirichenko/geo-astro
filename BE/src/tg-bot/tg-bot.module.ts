@@ -28,9 +28,7 @@ import {
   PromocodeUsage,
   PromocodeUsageSchema,
 } from 'src/database/schemas/promocode-usage.schema';
-
 import { LangMiddleware } from './middlewares/lang.middleware';
-import { NavKeyboardMiddleware } from './middlewares/nav-keyboard.middleware';
 import { TgBotFormCacheService } from './services/tg-bot-service-form-cache.service';
 
 @Module({
@@ -49,17 +47,11 @@ import { TgBotFormCacheService } from './services/tg-bot-service-form-cache.serv
       useFactory: (configService: ConfigService, moduleRef: ModuleRef) => {
         const token = configService.get<string>('TG_BOT_TOKEN');
         if (!token) throw new Error('TG_BOT_TOKEN is not defined in .env');
-
         const langMiddleware = new LangMiddleware(moduleRef);
-        // const keyboardMiddleware = new NavKeyboardMiddleware();
 
         return {
           token,
-          middlewares: [
-            session(),
-            langMiddleware.getMiddleware(),
-            // keyboardMiddleware.getMiddleware(),
-          ],
+          middlewares: [session(), langMiddleware.getMiddleware()],
         };
       },
     }),
@@ -74,7 +66,6 @@ import { TgBotFormCacheService } from './services/tg-bot-service-form-cache.serv
     TgBotFormCacheService,
     TgBotServiceFormService,
     LangMiddleware,
-    NavKeyboardMiddleware,
   ],
   exports: [MongooseModule],
 })

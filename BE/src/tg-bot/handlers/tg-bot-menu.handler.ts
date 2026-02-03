@@ -1,5 +1,5 @@
 import { Action, Ctx, Hears, Start, Update } from 'nestjs-telegraf';
-import { Context } from 'telegraf';
+import { Context, Markup } from 'telegraf';
 import {
   EVENT_REGEX,
   EXISTING_USER_ACTIONS,
@@ -48,8 +48,10 @@ export class TgBotMenuHandler {
   @Hears(EVENT_REGEX.main_menu_nav)
   async onNavMainMenu(@Ctx() ctx: RegExpContext): Promise<void> {
     try {
-      ctx.session['step'] = NavigationEventsEnum.main_menu;
+      const msg = await ctx.reply('...', Markup.removeKeyboard());
+      await ctx.deleteMessage(msg.message_id);
       await this.showMainMenu(ctx);
+      ctx.session['step'] = NavigationEventsEnum.main_menu;
     } catch (e) {
       await ctx.answerCbQuery();
       console.error('nav main menu error:', e);
@@ -137,11 +139,25 @@ export class TgBotMenuHandler {
     }
   }
 
+  @Hears(EVENT_REGEX.services_menu_nav)
+  async onNavServicesMenu(@Ctx() ctx: RegExpContext): Promise<void> {
+    try {
+      const msg = await ctx.reply('...', Markup.removeKeyboard());
+      await ctx.deleteMessage(msg.message_id);
+      await this.localizationService.showServicesMenu(ctx);
+      ctx.session['step'] = ServicesEventEnum.service_menu;
+      await ctx.answerCbQuery();
+    } catch (e) {
+      await ctx.answerCbQuery();
+      console.error('nav main menu error:', e);
+    }
+  }
+
   @Action(EVENT_REGEX.service_menu)
   async onServicesMenu(@Ctx() ctx: RegExpContext): Promise<void> {
     try {
-      ctx.session['step'] = ServicesEventEnum.service_menu;
       await this.localizationService.showServicesMenu(ctx);
+      ctx.session['step'] = ServicesEventEnum.service_menu;
       await ctx.answerCbQuery();
     } catch (e) {
       await ctx.answerCbQuery();

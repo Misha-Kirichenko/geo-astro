@@ -51,7 +51,6 @@ export class TgBotPromocodeService {
     ) {
       const promocode = ctx.match[1].toUpperCase();
       if (!promocode) return;
-      ctx.session['step'] = PromocodeEventEnum.promo_apply;
 
       const promo = await this.promocodeModel.findOne(
         { alias: promocode },
@@ -114,6 +113,7 @@ export class TgBotPromocodeService {
           };
 
           await ctx.reply(clientMessagesUtil.promoApplied(chosenLang));
+          ctx.session['step'] = PromocodeEventEnum.promo_apply;
           await getKeyBoardWithPrice(keyBoardWithPriceParamsObj);
         }
       }

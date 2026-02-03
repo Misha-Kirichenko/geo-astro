@@ -7,11 +7,19 @@ import { getFormPreviewUtil, getNavMenu } from 'src/utils';
 import { TgBotFormCacheService } from './tg-bot-service-form-cache.service';
 import { IFormData } from '../interfaces';
 import { TFullFormData, TPartialForms } from '../types';
-import { Context, Markup } from 'telegraf';
+import { Context } from 'telegraf';
 
 @Injectable()
 export class TgBotServiceFormService {
   constructor(private readonly formCacheService: TgBotFormCacheService) { }
+  public async startFromScratch(ctx: RegExpContext): Promise<void> {
+    await this.formCacheService.removeKey(
+      ctx.from?.id as number,
+      ctx.session.serviceItem as ServiceEnum,
+    );
+    await this.getFistStageTip(ctx);
+  }
+
   public async showFormPreview(
     ctx: Context,
     existingForm: TFullFormData | TPartialForms,
@@ -129,16 +137,10 @@ export class TgBotServiceFormService {
     if (formData.stage < rules.length) {
       const rule = rules[Number(formData.stage)];
       const replyKeyboard = getNavMenu(ctx, formData);
-      await ctx.reply(rule.fieldTip, {
-        ...Markup.removeKeyboard(),
-        ...replyKeyboard,
-      });
+      await ctx.reply(rule.fieldTip, replyKeyboard);
     } else {
       const replyKeyboard = getNavMenu(ctx, formData);
-      await ctx.reply(CHOOSE_ACTION[currentLang as LangEnum], {
-        ...Markup.removeKeyboard(),
-        ...replyKeyboard,
-      });
+      await ctx.reply(CHOOSE_ACTION[currentLang as LangEnum], replyKeyboard);
     }
     return;
   }

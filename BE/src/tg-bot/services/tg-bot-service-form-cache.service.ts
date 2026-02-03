@@ -25,6 +25,14 @@ export class TgBotFormCacheService {
     return `${this.FORM_PREFIX}:${tgBotUserId}:${serviceSlug}`;
   }
 
+  public async removeKey(
+    tgBotUserId: number,
+    serviceSlug: ServiceEnum,
+  ): Promise<void> {
+    const key = this.makeKey(tgBotUserId, serviceSlug);
+    await this.cache.del(key);
+  }
+
   public async resetFormDataToPrevStage(
     tgBotUserId: number,
     serviceSlug: ServiceEnum,
@@ -32,8 +40,7 @@ export class TgBotFormCacheService {
   ): Promise<void> {
     const { stage } = currentFormData;
     if (stage === 0) {
-      const key = this.makeKey(tgBotUserId, serviceSlug);
-      await this.cache.del(key);
+      await this.removeKey(tgBotUserId, serviceSlug);
       return;
     }
     const newFormData = { ...currentFormData };

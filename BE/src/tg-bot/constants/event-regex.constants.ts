@@ -8,6 +8,14 @@ import { NAV_MENU } from './chat-menu-constants';
 import { REGEXES } from 'src/common/constants';
 
 export const EVENT_REGEX = {
+  fill_form_from_scratch: new RegExp(
+    `^(${Object.values(NAV_MENU.retry_button).join('|')})$`,
+    'i',
+  ),
+  view_form: new RegExp(
+    `^(${Object.values(NAV_MENU.form_preview).join('|')})$`,
+    'i',
+  ),
   lang_select: new RegExp(
     `^${LangEventEnum.lang_select}:(${Object.values(LangEnum).join('|')})`,
     'i',
@@ -20,6 +28,9 @@ export const EVENT_REGEX = {
   main_menu: new RegExp(`^${NavigationEventsEnum.main_menu}$`),
   main_menu_nav: new RegExp(
     `^(${Object.values(NAV_MENU.main_menu).join('|')})$`,
+  ),
+  services_menu_nav: new RegExp(
+    `^(${Object.values(NAV_MENU.services_button).join('|')})$`,
   ),
   prev_stage_nav: new RegExp(
     `^(${Object.values(NAV_MENU.prev_step).join('|')})$`,

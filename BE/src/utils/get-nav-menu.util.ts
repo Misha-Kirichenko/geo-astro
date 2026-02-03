@@ -35,6 +35,6 @@ export const getNavMenu = (ctx: RegExpContext, formData: TPartialForms) => {
     ]);
   }
 
-  const navMenuKeyboard = Markup.keyboard(navMenu).resize().oneTime();
+  const navMenuKeyboard = Markup.keyboard(navMenu).resize();
   return navMenuKeyboard;
 };
