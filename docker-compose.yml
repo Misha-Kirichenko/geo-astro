@@ -28,7 +28,6 @@ services:
     env_file:
       - .env
     restart: unless-stopped
-
   astro-bot-cache:
     image: redis:alpine
     container_name: astro-bot-cache
