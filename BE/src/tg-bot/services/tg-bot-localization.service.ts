@@ -25,7 +25,7 @@ export class TgBotLocalizationService {
     private readonly tgBotUserService: TgBotUserService,
     private readonly tgBotPromocodeCacheService: TgBotPromocodeCacheService,
     private readonly tgBotFormCacheService: TgBotFormCacheService,
-  ) { }
+  ) {}
 
   public async handleFirstGreeting(ctx: Context): Promise<void> {
     const selectedLang = (ctx.session.lang ||
@@ -127,7 +127,7 @@ export class TgBotLocalizationService {
 
     const serviceMenuHeading =
       SERVICE_LIST_HEADING[
-      ctx.session.lang as keyof typeof SERVICE_LIST_HEADING
+        ctx.session.lang as keyof typeof SERVICE_LIST_HEADING
       ];
     await ctx.reply(serviceMenuHeading, servicesKeyboard);
   }
@@ -144,9 +144,8 @@ export class TgBotLocalizationService {
     if (!service) throw new Error(messageUtil.ERRORS.notFound('Service'));
     ctx.session['serviceItem'] = service.slug;
 
-    const cachedPromocode = await this.tgBotPromocodeCacheService.get(
+    const cachedPromoData = await this.tgBotPromocodeCacheService.get(
       ctx.from?.id as number,
-      service.slug,
     );
 
     const cachedFormData = await this.tgBotFormCacheService.getFormData(
@@ -157,9 +156,10 @@ export class TgBotLocalizationService {
     const keyBoardWithPriceParamsObj = {
       ctx,
       service,
-      ...(cachedPromocode && {
-        discountPercent: cachedPromocode.discountPercent,
-      }),
+      ...(cachedPromoData &&
+        cachedPromoData.serviceSlug === serviceSlug && {
+          discountPercent: cachedPromoData.discountPercent,
+        }),
       ...(cachedFormData && { formDataStage: cachedFormData.stage }),
     };
 

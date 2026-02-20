@@ -37,7 +37,7 @@ export class TgBotPromocodeService {
     private readonly promocodeUsageModel: Model<PromocodeUsageDocument>,
     private readonly tgBotFormCacheService: TgBotFormCacheService,
     private readonly promoCacheService: TgBotPromocodeCacheService,
-  ) { }
+  ) {}
 
   public async tryGetPriceWithPromo(ctx: RegExpContext): Promise<void> {
     const chosenLang = (ctx.session.lang ||
@@ -85,15 +85,15 @@ export class TgBotPromocodeService {
         }
         //store pair of service name and promocode to determine final price later
         const promocodeData = {
-          alias: promocode,
+          promocode,
           discountPercent: promo.discountPercent,
           expiresAt: promo.expiresAt,
           usageLimit: promo.usageLimit,
+          serviceSlug: service.slug,
         };
 
         const isStored = await this.promoCacheService.tryStore(
           ctx.from?.id as number,
-          service.slug,
           promocodeData,
         );
 
