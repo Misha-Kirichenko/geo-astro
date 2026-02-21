@@ -1,19 +1,23 @@
 import { Module } from '@nestjs/common';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { ConfigService } from '@nestjs/config';
-import { Context, session } from 'telegraf';
+import { session } from 'telegraf';
 import { ModuleRef } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { TgBotMenuHandler, TgBotServicesHandler } from './handlers';
+import {
+  TgBotMenuHandler,
+  TgBotServicesHandler,
+  TgBotPaymentsMenuHandler,
+} from './handlers';
 import {
   TgBotLocalizationService,
   TgBotPromocodeService,
   TgBotUserService,
   TgBotPromocodeCacheService,
   TgBotServiceFormService,
+  TgBotPaymentsMenuService,
 } from './services';
-
 import { DatabaseModule } from 'src/database/database.module';
 import { connections } from 'src/common/constants';
 import {
@@ -57,6 +61,7 @@ import { TgBotFormCacheService } from './services/tg-bot-service-form-cache.serv
     }),
   ],
   providers: [
+    LangMiddleware,
     TgBotMenuHandler,
     TgBotLocalizationService,
     TgBotUserService,
@@ -65,8 +70,9 @@ import { TgBotFormCacheService } from './services/tg-bot-service-form-cache.serv
     TgBotServicesHandler,
     TgBotFormCacheService,
     TgBotServiceFormService,
-    LangMiddleware,
+    TgBotPaymentsMenuService,
+    TgBotPaymentsMenuHandler,
   ],
   exports: [MongooseModule],
 })
-export class TgBotModule { }
+export class TgBotModule {}

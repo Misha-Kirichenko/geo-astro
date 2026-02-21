@@ -4,3 +4,4 @@ export * from './navigation-events.enum';
 export * from './promocode-events.enum';
 export * from './client-sources.enum';
 export * from './service-form-fields.enum';
+export * from './payment-event.enum';

@@ -10,40 +10,42 @@ import { REGEXES } from 'src/common/constants';
 export const EVENT_REGEX = {
   fill_form_from_scratch: new RegExp(
     `^(${Object.values(NAV_MENU.retry_button).join('|')})$`,
-    'i',
+    'iu',
   ),
   view_form: new RegExp(
     `^(${Object.values(NAV_MENU.form_preview).join('|')})$`,
-    'i',
+    'iu',
   ),
   lang_select: new RegExp(
     `^${LangEventEnum.lang_select}:(${Object.values(LangEnum).join('|')})`,
-    'i',
+    'iu',
   ),
   lang_menu: new RegExp(`^${LangEventEnum.lang_menu}`),
   lang_change: new RegExp(
     `^${LangEventEnum.lang_change}:(${Object.values(LangEnum).join('|')})`,
-    'i',
+    'iu',
   ),
   main_menu: new RegExp(`^${NavigationEventsEnum.main_menu}$`),
   main_menu_nav: new RegExp(
     `^(${Object.values(NAV_MENU.main_menu).join('|')})$`,
+    'iu',
   ),
   services_menu_nav: new RegExp(
     `^(${Object.values(NAV_MENU.services_button).join('|')})$`,
+    'iu',
   ),
   prev_stage_nav: new RegExp(
     `^(${Object.values(NAV_MENU.prev_step).join('|')})$`,
   ),
   service_select: new RegExp(
     `^${ServicesEventEnum.service_select}:(${Object.values(ServiceEnum).join('|')})`,
-    'i',
+    'iu',
   ),
   service_menu: new RegExp(`^${ServicesEventEnum.service_menu}`),
   promocode: new RegExp('^/promo/([a-z0-9_-]{9,10})$', 'i'),
   service_form: new RegExp(
     `^${ServicesEventEnum.service_form}:(${Object.values(ServiceEnum).join('|')}):(0)$`,
-    'i',
+    'iu',
   ),
   service_form_continue: new RegExp(
     `^${ServicesEventEnum.service_form_fill_continue}:(${Object.values(ServiceEnum).join('|')}):([0-9]{1,2})$`,
@@ -53,6 +55,10 @@ export const EVENT_REGEX = {
     Object.values(REGEXES.FORM_DATA_REGEXES)
       .map((r) => r.source)
       .join('|'),
+    'iu',
+  ),
+  go_to_payments_menu: new RegExp(
+    `^(${Object.values(NAV_MENU.go_to_payment).join('|')})$`,
     'iu',
   ),
 };
