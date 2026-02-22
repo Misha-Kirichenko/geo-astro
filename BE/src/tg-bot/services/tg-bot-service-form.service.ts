@@ -11,7 +11,7 @@ import { Context } from 'telegraf';
 
 @Injectable()
 export class TgBotServiceFormService {
-  constructor(private readonly formCacheService: TgBotFormCacheService) { }
+  constructor(private readonly formCacheService: TgBotFormCacheService) {}
   public async startFromScratch(ctx: RegExpContext): Promise<void> {
     await this.formCacheService.removeKey(
       ctx.from?.id as number,
@@ -146,23 +146,29 @@ export class TgBotServiceFormService {
   }
 
   public async getFistStageTip(ctx: RegExpContext): Promise<void> {
-    const [, serviceSlug, stage] = ctx.match;
-    if (!serviceSlug) return;
-    const message = FILL_FORM[ctx.session.lang as LangEnum];
-    await ctx.reply(message);
+    const [, serviceSlug] = ctx.match;
+    if (!serviceSlug && !ctx.session.serviceItem) return;
     const serviceFormValidationObj = SERVICE_FORM_VALIDATION(
       ctx.session.lang as LangEnum,
     );
-    const rules = serviceFormValidationObj[serviceSlug as ServiceEnum];
+
+    const rules =
+      serviceFormValidationObj[
+        ctx.session.serviceItem || (serviceSlug as ServiceEnum)
+      ];
     if (!rules) return;
-    const rule = rules[Number(stage)];
+    const [rule] = rules;
+
     if (!rule) return;
+    const message = FILL_FORM[ctx.session.lang as LangEnum];
+    await ctx.reply(message);
+
     if (ctx.session.serviceItem) {
       const formData = await this.formCacheService.ininializeForm(
         ctx.from!.id,
         ctx.session.serviceItem,
       );
-      const replyKeyboard = getNavMenu(ctx, formData);
+      const replyKeyboard = getNavMenu(ctx as Context, formData);
       await ctx.reply(rule.fieldTip, replyKeyboard);
     }
   }

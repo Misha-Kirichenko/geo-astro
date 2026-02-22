@@ -8,6 +8,7 @@ import { NAV_MENU } from './chat-menu-constants';
 import { REGEXES } from 'src/common/constants';
 
 export const EVENT_REGEX = {
+  back_to_form_fill: new RegExp(`^${NavigationEventsEnum.back_to_form_fill}$`),
   fill_form_from_scratch: new RegExp(
     `^(${Object.values(NAV_MENU.retry_button).join('|')})$`,
     'iu',

@@ -5,3 +5,4 @@ export * from './promocode-events.enum';
 export * from './client-sources.enum';
 export * from './service-form-fields.enum';
 export * from './payment-event.enum';
+export * from './payment-step.enum';

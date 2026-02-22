@@ -62,6 +62,7 @@ import { TgBotFormCacheService } from './services/tg-bot-service-form-cache.serv
   ],
   providers: [
     LangMiddleware,
+    TgBotPaymentsMenuHandler,
     TgBotMenuHandler,
     TgBotLocalizationService,
     TgBotUserService,
@@ -71,8 +72,7 @@ import { TgBotFormCacheService } from './services/tg-bot-service-form-cache.serv
     TgBotFormCacheService,
     TgBotServiceFormService,
     TgBotPaymentsMenuService,
-    TgBotPaymentsMenuHandler,
   ],
   exports: [MongooseModule],
 })
-export class TgBotModule {}
+export class TgBotModule { }

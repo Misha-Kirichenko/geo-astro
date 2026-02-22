@@ -1,6 +1,9 @@
 import { LangEnum, PaymentTypeEnum } from 'src/common/enums';
 
-export const PAYMENT_TYPE_MENU = {
+export const PAYMENT_TYPE_MENU: Record<
+  LangEnum,
+  Record<PaymentTypeEnum, string>
+> = {
   [LangEnum.EN]: {
     [PaymentTypeEnum.ONLINE_PAYMENT]: `💳 Online payment`,
     [PaymentTypeEnum.INVOICE]: '🧾Bank transfer / Invoice',
@@ -16,7 +19,7 @@ export const PAYMENT_TYPE_MENU = {
 };
 
 export const PAYMENT_TYPE_MENU_HEADING = {
-  [LangEnum.EN]: 'Please select a payment type:',
-  [LangEnum.RU]: 'Пожалуйста, выберите вариант оплаты:',
-  [LangEnum.GE]: 'გთხოვთ, აირჩიეთ გადახდის ტიპი:',
+  [LangEnum.EN]: 'Please select a payment type',
+  [LangEnum.RU]: 'Пожалуйста, выберите вариант оплаты',
+  [LangEnum.GE]: 'გთხოვთ, აირჩიეთ გადახდის ტიპი',
 };

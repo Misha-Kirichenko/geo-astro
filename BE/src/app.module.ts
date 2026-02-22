@@ -14,4 +14,4 @@ import { AppCacheModule } from './app-cache/app-cache.module';
     AppCacheModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}

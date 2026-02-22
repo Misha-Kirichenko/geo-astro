@@ -1,2 +1,2 @@
 type TButton = { text: string; callback_data: string };
-export type TInlineMenuItem = [TButton];
+export type TInlineMenuItem = TButton[];

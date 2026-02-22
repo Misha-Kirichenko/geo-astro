@@ -1,12 +1,11 @@
 import { LangEnum, ServiceEnum } from 'src/common/enums';
-import { RegExpContext } from 'src/common/interfaces';
 import { NAV_MENU } from 'src/tg-bot/constants';
 import { ServicesEventEnum } from 'src/tg-bot/enums';
 import { TPartialForms } from 'src/tg-bot/types';
 import { SERVICE_FORM_VALIDATION } from 'src/tg-bot/validation/service-form.validation';
-import { Markup } from 'telegraf';
+import { Context, Markup } from 'telegraf';
 
-export const getNavMenu = (ctx: RegExpContext, formData: TPartialForms) => {
+export const getNavMenu = (ctx: Context, formData: TPartialForms) => {
   const { lang, step, serviceItem } = ctx.session;
   const navMenu = [
     [
@@ -15,11 +14,15 @@ export const getNavMenu = (ctx: RegExpContext, formData: TPartialForms) => {
     ],
   ];
 
-  const formFillStarted = formData.form1
-    ? Boolean(Object.keys(formData.form1).length)
-    : false;
+  // const formFillStarted = formData.form1
+  //   ? Boolean(Object.keys(formData.form1).length)
+  //   : false;
 
-  if (step && step === ServicesEventEnum.service_form && formFillStarted) {
+  if (
+    step &&
+    step === ServicesEventEnum.service_form &&
+    Number(formData.stage)
+  ) {
     navMenu.unshift([
       NAV_MENU.retry_button[lang as LangEnum],
       NAV_MENU.prev_step[lang as LangEnum],

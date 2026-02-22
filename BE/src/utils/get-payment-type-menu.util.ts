@@ -1,6 +1,6 @@
 import { LangEnum, PaymentTypeEnum } from 'src/common/enums';
-import { PAYMENT_TYPE_MENU } from 'src/tg-bot/constants';
-import { PaymentEventEnum } from 'src/tg-bot/enums';
+import { BACK, PAYMENT_TYPE_MENU } from 'src/tg-bot/constants';
+import { NavigationEventsEnum, PaymentEventEnum } from 'src/tg-bot/enums';
 import { TInlineMenuItem } from 'src/tg-bot/types';
 
 export const getPaymentTypeMenu = (lang: LangEnum): TInlineMenuItem[] => {
@@ -20,5 +20,13 @@ export const getPaymentTypeMenu = (lang: LangEnum): TInlineMenuItem[] => {
     menuItemsArray.push(menuItem);
   }
 
+  const backButton = [
+    {
+      text: BACK[lang],
+      callback_data: NavigationEventsEnum.back_to_form_fill,
+    },
+  ];
+
+  menuItemsArray.push(backButton);
   return menuItemsArray;
 };
